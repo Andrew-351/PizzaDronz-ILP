@@ -22,7 +22,7 @@ public record LngLat(double lng, double lat) {
 
     public boolean inCentralArea() {
         boolean oddEdgesCrossedOnTheLeft = false;
-        LngLat[] coordinates = CentralArea.instance.vertexCoordinates;
+        LngLat[] coordinates = CentralArea.instance.getVertexCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             double x1 = coordinates[i].lng;
             double y1 = coordinates[i].lat;
@@ -36,5 +36,22 @@ public record LngLat(double lng, double lat) {
         }
 
         return oddEdgesCrossedOnTheLeft;
+    }
+
+    private double distanceTo (LngLat point) {
+        return Math.sqrt(Math.pow(point.lng - lng, 2) + Math.pow(point.lat - lat, 2));
+    }
+
+    public boolean closeTo(LngLat point) {
+        return distanceTo(point) < MovementConstants.DISTANCE_TOLERANCE;
+    }
+
+    public LngLat nextPosition (CompassDirection direction) {
+        if (direction == CompassDirection.HOVER) {
+            return this;
+        }
+        return new LngLat (
+            lng + MovementConstants.MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
+            lat + MovementConstants.MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
     }
 }
