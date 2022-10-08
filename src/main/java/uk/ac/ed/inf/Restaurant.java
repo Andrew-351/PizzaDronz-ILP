@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Map;
 
 public class Restaurant {
-
     private final String name;
     private final LngLat location;
     private final Menu menu;

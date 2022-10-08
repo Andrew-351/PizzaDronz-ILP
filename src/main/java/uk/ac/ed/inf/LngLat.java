@@ -7,17 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record LngLat(double lng, double lat) {
 
     public LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latitude") double lat) {
-        /*
-          Longitude has to be in the range from -180 to 180 degrees.
-          Latitude has to be in the range from -90 to 90 degrees.
-         */
-        if (lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90) {
             this.lng = lng;
             this.lat = lat;
-        }
-        else {
-            throw new IllegalArgumentException("Invalid longitude/latitude values.");
-        }
     }
 
     public boolean inCentralArea() {
