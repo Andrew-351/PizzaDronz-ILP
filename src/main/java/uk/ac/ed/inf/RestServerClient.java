@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public final class RestServerClient {
-    public static String BASE_URL = "https://ilp-rest.azurewebsites.net/";   // default base URL
+    public static String BASE_URL = "https://ilp-rest.azurewebsites.net/";
     public final static String CENTRAL_AREA_ENDPOINT = "centralArea";
     public final static String NO_FLY_ZONES_ENDPOINT = "noFlyZones";
     public final static String RESTAURANTS_ENDPOINT = "restaurants";
@@ -15,7 +15,11 @@ public final class RestServerClient {
         BASE_URL = url;
     }
 
-    public static Object getDataFromServer(URL url, Class<?> c) throws IOException {
-        return new ObjectMapper().readValue(url, c);
+    public static Object getDataFromServer(URL url, Class<?> c) {
+        try {
+            return new ObjectMapper().readValue(url, c);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

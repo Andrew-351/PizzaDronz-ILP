@@ -15,9 +15,7 @@ public final class CentralArea {
     static {
         try {
             instance = new CentralArea();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignored) {}
     }
 
     public LngLat[] getVertexCoordinates() {

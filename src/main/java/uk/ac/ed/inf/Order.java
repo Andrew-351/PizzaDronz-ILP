@@ -29,7 +29,7 @@ public class Order {
             throw new InvalidPizzaCombinationException("Invalid pizza combination - pizzas are not from the same restaurant.");
         }
         else {
-            System.err.println("No participating restaurants or no pizzas in the order specified.");
+//            System.err.println("No participating restaurants or no pizzas in the order specified.");
             return -1;
         }
     }

@@ -1,7 +1,6 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
@@ -20,12 +19,7 @@ public class Restaurant {
     }
 
     static Restaurant[] getRestaurantsFromRestServer(URL url) {
-        try {
-            return (Restaurant[]) RestServerClient.getDataFromServer(url, Restaurant[].class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return (Restaurant[]) RestServerClient.getDataFromServer(url, Restaurant[].class);
     }
 
     public String getName() {
