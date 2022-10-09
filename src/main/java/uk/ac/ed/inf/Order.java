@@ -2,8 +2,20 @@ package uk.ac.ed.inf;
 
 import java.util.List;
 
+/**
+ * Representation of an order.
+ */
+
 public class Order {
 
+    /**
+     * Returns the cost (in pence) of delivering the specified list of pizzas by drone, including £1 delivery charge.
+     * @param restaurants array of participating restaurants
+     * @param pizzaNames list of names of the pizzas ordered
+     * @return cost of delivering the pizzas if the combination of pizzas is valid;
+     *         -1 if no restaurants/pizzas to be delivered are specified (i.e. one of the parameters is null or empty).
+     * @throws InvalidPizzaCombinationException if the combination of pizzas is invalid
+     */
     public int getDeliveryCost(Restaurant[] restaurants, List<String> pizzaNames) throws InvalidPizzaCombinationException {
         if (restaurants != null && restaurants.length > 0 && pizzaNames != null && pizzaNames.size() > 0) {
             for (Restaurant restaurant : restaurants) {
@@ -29,7 +41,6 @@ public class Order {
             throw new InvalidPizzaCombinationException("Invalid pizza combination - pizzas are not from the same restaurant.");
         }
         else {
-//            System.err.println("No participating restaurants or no pizzas in the order specified.");
             return -1;
         }
     }
