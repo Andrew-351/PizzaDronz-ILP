@@ -18,6 +18,9 @@ public class Order {
      */
     public int getDeliveryCost(Restaurant[] restaurants, List<String> pizzaNames) throws InvalidPizzaCombinationException {
         if (restaurants != null && restaurants.length > 0 && pizzaNames != null && pizzaNames.size() > 0) {
+            if (pizzaNames.size() > 4) {
+                throw new InvalidPizzaCombinationException("Invalid pizza combination - more than 4 pizzas ordered.");
+            }
             for (Restaurant restaurant : restaurants) {
                 int deliveryCost = 0;
                 int pizzaNamesFound = 0;

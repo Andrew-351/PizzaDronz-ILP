@@ -42,10 +42,19 @@ public record LngLat(double lng, double lat) {
             double y2 = coordinates[(i + 1) % coordinates.length].lat;
             LngLat lngLat2 = new LngLat(x2, y2);
 
+            /*
+              If the point is on the edge of the polygon, it is considered to be inside it.
+              The point being on the edge means the distance from one vertex to the other vertex
+              equals the sum of the distances from each of the vertices to the point.
+             */
             if (lngLat1.distanceTo(this) + lngLat2.distanceTo(this) == lngLat1.distanceTo(lngLat2)) {
                 return true;
             }
 
+            /*
+              The point is inside the polygon if there is an odd number of edges crossed by
+              the line y = this.lat
+             */
             if ((y1 < lat && lat <= y2) || (y2 < lat && lat <= y1)) {
                 if (x1 + (lat - y1) / (y2 - y1) * (x2 - x1) < lng) {
                     oddEdgesCrossedOnTheLeft = !oddEdgesCrossedOnTheLeft;
