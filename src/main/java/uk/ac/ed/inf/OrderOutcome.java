@@ -1,5 +1,9 @@
 package uk.ac.ed.inf;
 
+/**
+ * Representation of an outcome of an order.
+ */
+
 public enum OrderOutcome {
     Delivered,
     ValidButNotDelivered,
