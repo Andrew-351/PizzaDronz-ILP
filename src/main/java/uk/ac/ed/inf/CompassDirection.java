@@ -93,7 +93,7 @@ public enum CompassDirection {
     /**
      * The angle in degrees corresponding to the compass direction.
      */
-    private final double angle;
+    private final Double angle;
 
     /**
      * Constructor to initialise an instance variable.
