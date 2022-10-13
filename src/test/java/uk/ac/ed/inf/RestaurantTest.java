@@ -1,9 +1,10 @@
 package uk.ac.ed.inf;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for Restaurant class.
@@ -11,12 +12,12 @@ import static org.junit.Assert.assertNotNull;
 
 public class RestaurantTest {
     @Test
-    public void getRestaurantsFromRestServerTest() {
+    public void getRestaurantsFromRestServerTestSuccess() {
         try {
             assertNotNull(Restaurant.getRestaurantsFromRestServer(
-                    new URL(RestServerClient.BASE_URL + RestServerClient.RESTAURANTS_ENDPOINT)));
-        } catch (MalformedURLException e) {
-            assert(false);
+                    new URL(RestServerClient.BASE_URL)));
+        } catch (IOException e) {
+            fail();
         }
     }
 }

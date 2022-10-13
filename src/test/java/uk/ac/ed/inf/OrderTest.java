@@ -2,7 +2,6 @@ package uk.ac.ed.inf;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class OrderTest {
         order = new Order();
         try {
             restaurants = Restaurant.getRestaurantsFromRestServer(
-                    new URL(RestServerClient.BASE_URL + RestServerClient.RESTAURANTS_ENDPOINT));
+                    new URL(RestServerClient.BASE_URL));
         } catch (MalformedURLException e) {
             restaurants = null;
         }
@@ -35,7 +34,7 @@ public class OrderTest {
         try {
             assertEquals(-1, order.getDeliveryCost(rs, new ArrayList<>(Collections.singleton("Pizza1"))));
         } catch (InvalidPizzaCombinationException e) {
-            assert(false);
+            fail();
         }
     }
 
@@ -44,7 +43,7 @@ public class OrderTest {
         try {
             assertEquals(-1, order.getDeliveryCost(restaurants, new ArrayList<>()));
         } catch (InvalidPizzaCombinationException e) {
-            assert(false);
+            fail();
         }
     }
 
@@ -56,9 +55,9 @@ public class OrderTest {
         }
         try {
             order.getDeliveryCost(restaurants, pizzas);
-            assert(false);
+            fail();
         } catch (InvalidPizzaCombinationException e) {
-            assert(true);
+            assertTrue(true);
         }
     }
 
@@ -69,9 +68,9 @@ public class OrderTest {
         pizzas.add("Vegan Delight");
         try {
             order.getDeliveryCost(restaurants, pizzas);
-            assert(false);
+            fail();
         } catch (InvalidPizzaCombinationException e) {
-            assert(true);
+            assertTrue(true);
         }
     }
 
@@ -83,7 +82,7 @@ public class OrderTest {
             int cost = order.getDeliveryCost(restaurants, pizzas);
             assertEquals(1500, cost);
         } catch (InvalidPizzaCombinationException e) {
-            assert(false);
+            fail();
         }
     }
 
@@ -96,7 +95,7 @@ public class OrderTest {
             int cost = order.getDeliveryCost(restaurants, pizzas);
             assertEquals(2600, cost);
         } catch (InvalidPizzaCombinationException e) {
-            assert(false);
+            fail();
         }
     }
 }

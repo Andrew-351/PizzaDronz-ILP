@@ -21,6 +21,7 @@ public class MenuTest {
 
         }
         Menu menu = new Menu(pizzas);
+
         assertArrayEquals(pizzasExpected, menu.getPizzas());
     }
 }

@@ -1,6 +1,8 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
@@ -42,11 +44,16 @@ public class Restaurant {
 
     /**
      * Static method to get an array of all participating restaurants from server.
-     * @param url URL where to get participating restaurants from (an endpoint)
+     * @param serverBaseAddress base URL of the server where to get participating restaurants from
      * @return an array of participating restaurants.
      */
-    static Restaurant[] getRestaurantsFromRestServer(URL url) {
-        return (Restaurant[]) RestServerClient.getDataFromServer(url, Restaurant[].class);
+    static Restaurant[] getRestaurantsFromRestServer(URL serverBaseAddress) {
+        try {
+            return (Restaurant[]) RestServerClient.getDataFromServer(
+                    new URL(serverBaseAddress + RestServerClient.RESTAURANTS_ENDPOINT), Restaurant[].class);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     /**

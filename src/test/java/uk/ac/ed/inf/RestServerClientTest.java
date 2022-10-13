@@ -25,7 +25,7 @@ public class RestServerClientTest {
             assertNull(RestServerClient.getDataFromServer(
                     new URL(RestServerClient.BASE_URL + RestServerClient.ORDERS_ENDPOINT), Restaurant.class));
         } catch (MalformedURLException e) {
-            assert(false);
+            fail();
         }
     }
 
@@ -39,7 +39,7 @@ public class RestServerClientTest {
             assertArrayEquals(centralArea.getVertexCoordinates(), vertices);
 
         } catch (MalformedURLException e) {
-            assert(false);
+            fail();
         }
     }
 }
