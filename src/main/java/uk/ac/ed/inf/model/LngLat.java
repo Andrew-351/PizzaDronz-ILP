@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,9 +30,9 @@ public record LngLat(double lng, double lat) {
      * Determines if the LngLat point is within the Central area.
      * @return true if the point is within the Central area; false otherwise.
      */
-    public boolean inCentralArea() {
+    public boolean inCentralArea(CentralArea centralArea) {
         boolean oddEdgesCrossedOnTheLeft = false;
-        LngLat[] coordinates = CentralArea.instance.getVertexCoordinates();
+        LngLat[] coordinates = centralArea.vertexCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             double x1 = coordinates[i].lng;
             double y1 = coordinates[i].lat;

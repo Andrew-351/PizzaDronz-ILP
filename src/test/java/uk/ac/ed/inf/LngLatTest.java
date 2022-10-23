@@ -1,6 +1,10 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.model.CentralArea;
+import uk.ac.ed.inf.model.CompassDirection;
+import uk.ac.ed.inf.model.LngLat;
+import uk.ac.ed.inf.model.MovementConstants;
 import static org.junit.Assert.*;
 
 /**
@@ -8,6 +12,7 @@ import static org.junit.Assert.*;
  */
 
 public class LngLatTest {
+    private final CentralArea centralArea = CentralArea.getCentralAreaFromRestServer();
     private final LngLat pointInCentralArea = new LngLat(-3.19, 55.944);
     private final LngLat pointNotInCentralArea = new LngLat(-3.1924731, 55.946233);
     private final double DELTA = 1e-12;
@@ -26,24 +31,24 @@ public class LngLatTest {
 
     @Test
     public void inCentralAreaNo() {
-        assertFalse(pointNotInCentralArea.inCentralArea());
+        assertFalse(pointNotInCentralArea.inCentralArea(centralArea));
     }
 
     @Test
     public void inCentralAreaYes() {
-        assertTrue(pointInCentralArea.inCentralArea());
+        assertTrue(pointInCentralArea.inCentralArea(centralArea));
     }
 
     @Test
     public void inCentralAreaYesOnTheEdge() {
         LngLat point = new LngLat(-3.192473, 55.945);
-        assertTrue(point.inCentralArea());
+        assertTrue(point.inCentralArea(centralArea));
     }
 
     @Test
     public void inCentralAreaYesInTheCorner() {
         LngLat point = new LngLat(-3.184319, 55.942617);
-        assertTrue(point.inCentralArea());
+        assertTrue(point.inCentralArea(centralArea));
     }
 
     @Test

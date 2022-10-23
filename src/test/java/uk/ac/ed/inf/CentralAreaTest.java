@@ -2,6 +2,8 @@ package uk.ac.ed.inf;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ed.inf.model.CentralArea;
+import uk.ac.ed.inf.model.LngLat;
 import static org.junit.Assert.assertArrayEquals;
 
 /**
@@ -13,7 +15,7 @@ public class CentralAreaTest {
 
     @Before
     public void setUp() {
-        centralArea = CentralArea.instance;
+        centralArea = CentralArea.getCentralAreaFromRestServer();
     }
 
     @Test
@@ -24,7 +26,7 @@ public class CentralAreaTest {
         coordinates[2] = new LngLat(-3.184319, 55.942617);
         coordinates[3] = new LngLat(-3.184319, 55.946233);
 
-        assertArrayEquals(coordinates, centralArea.getVertexCoordinates());
+        assertArrayEquals(coordinates, centralArea.vertexCoordinates());
     }
 
 }

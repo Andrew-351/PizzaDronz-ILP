@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -32,9 +32,9 @@ public final class RestServerClient {
      * @param c variable type for deserialisation
      * @return data retrieved from server if successfully read; null otherwise.
      */
-    public static Object getDataFromServer(URL url, Class<?> c) {
+    public static Object getDataFromServer(String url, Class<?> c) {
         try {
-            return new ObjectMapper().readValue(url, c);
+            return new ObjectMapper().readValue(new URL(url), c);
         } catch (IOException e) {
             return null;
         }

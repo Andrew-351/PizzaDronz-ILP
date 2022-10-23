@@ -2,8 +2,9 @@ package uk.ac.ed.inf;
 
 import org.junit.Before;
 import org.junit.Test;
-import java.net.MalformedURLException;
-import java.net.URL;
+import uk.ac.ed.inf.model.InvalidPizzaCombinationException;
+import uk.ac.ed.inf.model.Order;
+import uk.ac.ed.inf.model.Restaurant;
 import java.util.ArrayList;
 import java.util.Collections;
 import static org.junit.Assert.*;
@@ -20,12 +21,7 @@ public class OrderTest {
     @Before
     public void setUp() {
         order = new Order();
-        try {
-            restaurants = Restaurant.getRestaurantsFromRestServer(
-                    new URL(RestServerClient.BASE_URL));
-        } catch (MalformedURLException e) {
-            restaurants = null;
-        }
+        restaurants = Restaurant.getRestaurantsFromRestServer();
     }
 
     @Test

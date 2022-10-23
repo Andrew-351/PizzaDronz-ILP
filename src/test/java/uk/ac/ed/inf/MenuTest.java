@@ -2,6 +2,7 @@ package uk.ac.ed.inf;
 
 import java.util.HashMap;
 import org.junit.Test;
+import uk.ac.ed.inf.model.Menu;
 import static org.junit.Assert.assertArrayEquals;
 
 /**
