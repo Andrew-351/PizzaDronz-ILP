@@ -1,43 +1,48 @@
 package uk.ac.ed.inf.model;
 
-import java.util.List;
-
 /**
  * Representation of an order.
  */
 
-public class Order {
+public record Order (String orderNo, String orderDate, String customer, String creditCardNumber,
+                     String creditCardExpiry, String cvv, int priceTotalInPence, String[] orderItems){
+    /**
+     * Static method to get all orders for a specific date.
+     */
+    public static Order[] getOrdersForDateFromRestServer(String date) {
+        return (Order[]) RestServerClient.getDataFromServer(
+                RestServerClient.BASE_URL + RestServerClient.ORDERS_ENDPOINT + date, Order[].class);
+    }
 
     /**
      * Returns the cost (in pence) of delivering the specified list of pizzas by drone, including £1 delivery charge.
      * @param restaurants array of participating restaurants
-     * @param pizzaNames list of names of the pizzas ordered
      * @return cost of delivering the pizzas if the combination of pizzas is valid;
      *         -1 if no restaurants/pizzas to be delivered are specified (i.e. one of the parameters is null or empty).
      * @throws InvalidPizzaCombinationException if the combination of pizzas is invalid
      */
-    public int getDeliveryCost(Restaurant[] restaurants, List<String> pizzaNames) throws InvalidPizzaCombinationException {
-        if (restaurants != null && restaurants.length > 0 && pizzaNames != null && pizzaNames.size() > 0) {
-            if (pizzaNames.size() > 4) {
+    public int getDeliveryCost(Restaurant[] restaurants) throws InvalidPizzaCombinationException {
+        if (restaurants != null && restaurants.length > 0 && orderItems != null && orderItems.length > 0) {
+            if (orderItems.length > 4) {
                 throw new InvalidPizzaCombinationException("Invalid pizza combination - more than 4 pizzas ordered.");
             }
             for (Restaurant restaurant : restaurants) {
                 int deliveryCost = 0;
-                int pizzaNamesFound = 0;
+                int orderItemsFound = 0;
                 Menu.Pizza[] pizzas = restaurant.getMenu().getPizzas();
-                for (String pizzaName : pizzaNames) {
+                for (String pizzaName : orderItems) {
                     boolean currentPizzaNameFound = false;
                     for (Menu.Pizza pizza : pizzas) {
                         if (pizza.name().equals(pizzaName)) {
                             deliveryCost += pizza.priceInPence();
-                            pizzaNamesFound++;
+                            orderItemsFound++;
                             currentPizzaNameFound = true;
                             break;
                         }
                     }
                     if (!currentPizzaNameFound) break;
                 }
-                if (pizzaNamesFound == pizzaNames.size()) {
+                if (orderItemsFound == orderItems.length) {
                     return deliveryCost + 100;
                 }
             }

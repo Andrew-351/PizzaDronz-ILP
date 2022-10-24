@@ -16,7 +16,7 @@ public final class RestServerClient {
     public final static String CENTRAL_AREA_ENDPOINT = "centralArea";
     public final static String NO_FLY_ZONES_ENDPOINT = "noFlyZones";
     public final static String RESTAURANTS_ENDPOINT = "restaurants";
-    public final static String ORDERS_ENDPOINT = "orders";
+    public final static String ORDERS_ENDPOINT = "orders/";
 
     /**
      * Updates the base URL of the server.

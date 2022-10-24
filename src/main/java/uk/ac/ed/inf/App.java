@@ -1,9 +1,11 @@
 package uk.ac.ed.inf;
 
-import uk.ac.ed.inf.model.*;
-import java.io.IOException;
+import uk.ac.ed.inf.controller.Controller;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  * PizzaDronz Project (Informatics Large Practical).
@@ -14,32 +16,27 @@ public class App
     public static void main(String[] args) {
         if (args.length != 3) {
             System.err.println("Wrong number of arguments - must be 3.");
-            // can it be 2?
         }
         else {
             String day = args[0];
             String baseUrlString = args[1];
             String seed = args[2];
-            URL baseUrl = null;
             try {
-                baseUrl = new URL(baseUrlString);
+                // Verify the day
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate date = LocalDate.parse(day, formatter);
+
+                // Verify the URL
+                URL baseUrl = new URL(baseUrlString);
                 if (!baseUrlString.endsWith("/")) {
                     baseUrlString += "/";
                 }
-                RestServerClient.setBaseUrl(baseUrlString);
-            } catch (IOException e) {
-                System.err.println("Invalid base URL provided.");
+                Controller controller = new Controller(day, baseUrlString, seed);
+            } catch (MalformedURLException e) {
+                System.err.println("Invalid server base URL provided.");
+            } catch (DateTimeParseException e) {
+                System.err.println("Invalid date format provided - must be YYYY-MM-DD.");
             }
-
-            CentralArea centralArea = CentralArea.getCentralAreaFromRestServer();
-            System.out.println(Arrays.toString(centralArea.vertexCoordinates()));
-
-            NoFlyZone[] noFlyZones = NoFlyZone.getNoFlyZonesFromRestServer();
-            for (NoFlyZone noFlyZone : noFlyZones) {
-                System.out.println(noFlyZone.getVertexCoordinates().length);
-            }
-//            Restaurant[] restaurants = null;
-//            restaurants = Restaurant.getRestaurantsFromRestServer();
         }
     }
 }
