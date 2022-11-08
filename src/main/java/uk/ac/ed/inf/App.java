@@ -32,10 +32,12 @@ public class App
                     baseUrlString += "/";
                 }
                 Controller controller = new Controller(day, baseUrlString, seed);
-            } catch (MalformedURLException e) {
-                System.err.println("Invalid server base URL provided.");
             } catch (DateTimeParseException e) {
                 System.err.println("Invalid date format provided - must be YYYY-MM-DD.");
+            } catch (MalformedURLException e) {
+                System.err.println("Invalid server base URL provided.");
+            } catch (NullPointerException e) {
+                System.err.println(e.getMessage());
             }
         }
     }

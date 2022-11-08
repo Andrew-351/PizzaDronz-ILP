@@ -26,13 +26,13 @@ public record Order (String orderNo, String orderDate, String customer, String c
             if (orderItems.length > 4) {
                 throw new InvalidPizzaCombinationException("Invalid pizza combination - more than 4 pizzas ordered.");
             }
-            for (Restaurant restaurant : restaurants) {
+            for (var restaurant : restaurants) {
                 int deliveryCost = 0;
                 int orderItemsFound = 0;
                 Menu.Pizza[] pizzas = restaurant.getMenu().getPizzas();
                 for (String pizzaName : orderItems) {
                     boolean currentPizzaNameFound = false;
-                    for (Menu.Pizza pizza : pizzas) {
+                    for (var pizza : pizzas) {
                         if (pizza.name().equals(pizzaName)) {
                             deliveryCost += pizza.priceInPence();
                             orderItemsFound++;

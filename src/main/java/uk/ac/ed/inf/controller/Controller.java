@@ -6,13 +6,35 @@ public class Controller {
     private final CentralArea centralArea;
     private final NoFlyZone[] noFlyZones;
     private final Restaurant[] restaurants;
-    private Order[] orders;
+    private final Order[] orders;
+    private final LngLat deliveryPoint;
 
-    public Controller(String date, String serverBaseUrl, String seed) {
+    public Controller(String date, String serverBaseUrl, String seed) throws NullPointerException {
         RestServerClient.setBaseUrl(serverBaseUrl);
-        this.centralArea = CentralArea.getCentralAreaFromRestServer();
-        this.noFlyZones = NoFlyZone.getNoFlyZonesFromRestServer();
-        this.restaurants = Restaurant.getRestaurantsFromRestServer();
-        this.orders = Order.getOrdersForDateFromRestServer(date);
+        centralArea = CentralArea.getCentralAreaFromRestServer();
+        if (centralArea.vertexCoordinates().length == 0) {
+            throw new NullPointerException("No central area data retrieved from server.");
+        }
+        noFlyZones = NoFlyZone.getNoFlyZonesFromRestServer();
+        if (noFlyZones == null) {
+            throw new NullPointerException("No no-fly zones data retrieved from server.");
+        }
+        restaurants = Restaurant.getRestaurantsFromRestServer();
+        if (restaurants == null || restaurants.length == 0) {
+            throw new NullPointerException("No restaurants data retrieved from server.");
+        }
+        orders = Order.getOrdersForDateFromRestServer(date);
+        if (orders == null || orders.length == 0) {
+            throw new NullPointerException("No orders to deliver on " + date + ".");
+        }
+        deliveryPoint = MovementConstants.APPLETON_TOWER;
+    }
+
+    private Flightpath calculateShortestFlightpathToRestaurant(LngLat restaurant) {
+        return null;
+    }
+
+    public void sortRestaurantsByDistance() {
+        double[] distancesToRestaurants = new double[restaurants.length];
     }
 }
