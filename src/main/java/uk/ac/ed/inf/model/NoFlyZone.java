@@ -20,8 +20,8 @@ public class NoFlyZone {
      * @param vertexCoordinates coordinates of the vertices of the no-fly zone.
      */
     public NoFlyZone(@JsonProperty("coordinates") List<List<Double>> vertexCoordinates) {
-        this.vertexCoordinates = new LngLat[vertexCoordinates.size()];
-        for (int i = 0; i < vertexCoordinates.size(); i++) {
+        this.vertexCoordinates = new LngLat[vertexCoordinates.size() - 1];
+        for (int i = 0; i < vertexCoordinates.size() - 1; i++) {
             this.vertexCoordinates[i] = new LngLat(vertexCoordinates.get(i).get(0), vertexCoordinates.get(i).get(1));
         }
     }

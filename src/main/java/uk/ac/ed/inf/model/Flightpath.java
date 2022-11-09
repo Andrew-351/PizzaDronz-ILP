@@ -6,8 +6,9 @@ public class Flightpath {
     private int lengthInMoves;
     private final LngLat startPoint;
     private final LngLat finishPoint;
-    private NoFlyZone[] noFlyZones;
+    private final NoFlyZone[] noFlyZones;
     private final ArrayList<LngLat> allPoints = new ArrayList<>();
+    private final ArrayList<LngLat[]> allEdges = new ArrayList<>();
     private final ArrayList<LngLat> flightpathPoints = new ArrayList<>();
 
     /**
@@ -23,47 +24,74 @@ public class Flightpath {
         flightpathPoints.add(finishPoint);
     }
 
+    // Check if p2 is between p1 and p3, assuming they are all collinear
+    private boolean collinearP2BetweenP1AndP3(LngLat p1, LngLat p2, LngLat p3) {
+        return p2.lng() <= Math.max(p1.lng(), p3.lng()) && p2.lng() >= Math.min(p1.lng(), p3.lng()) &&
+               p2.lat() <= Math.max(p1.lat(), p3.lat()) && p2.lat() >= Math.min(p1.lat(), p3.lat());
+    }
 
-    private boolean isVisible(LngLat point1, LngLat point2) {
-        // get all edges of all no-fly zones
-        // check if the line point1 --- point2 crosses any of them
-
-        ArrayList<LngLat[]> allEdges = new ArrayList<>();
-        for (var noFlyZone : noFlyZones) {
-            LngLat[] vertexCoordinates = noFlyZone.getVertexCoordinates();
-            int n = vertexCoordinates.length;
-            for (int i = 0; i < n; i++) {
-                LngLat[] edge = new LngLat[2];
-                edge[0] = vertexCoordinates[i];
-                edge[1] = vertexCoordinates[(i+1) % n];
-                allEdges.add(edge);
-            }
+    // Find the orientation of three points:
+    // 0 => collinear
+    // 1 => Clockwise
+    // -1 => Counterclockwise
+    private int threePointOrientation(LngLat p1, LngLat p2, LngLat p3) {
+        double orientation = (p2.lat() - p1.lat()) * (p3.lng() - p2.lng()) -
+                             (p2.lng() - p1.lng()) * (p3.lat() - p2.lat());
+        if (orientation == 0) {
+            return 0;
         }
+        return (orientation > 0) ? 1 : -1;
+    }
 
+    // Check if the line p1 --- p2 crosses any of all the edges
+    private boolean isVisible(LngLat p1, LngLat p2) {
         for (var edge : allEdges) {
+            if (p1.equals(edge[0]) || p1.equals(edge[1]) || p2.equals(edge[0]) || p2.equals(edge[1])) {
+                continue;
+            }
 
+            int orientation1 = threePointOrientation(p1, p2, edge[0]);
+            int orientation2 = threePointOrientation(p1, p2, edge[1]);
+            int orientation3 = threePointOrientation(edge[0], edge[1], p1);
+            int orientation4 = threePointOrientation(edge[0], edge[1], p2);
+            if (orientation1 != orientation2 && orientation3 != orientation4) {
+                return false;
+            }
+
+            if ((orientation1 == 0 && collinearP2BetweenP1AndP3(p1, edge[0], p2)) ||
+                (orientation2 == 0 && collinearP2BetweenP1AndP3(p1, edge[1], p2)) ||
+                (orientation3 == 0 && collinearP2BetweenP1AndP3(edge[0], p1, edge[1])) ||
+                (orientation4 == 0 && collinearP2BetweenP1AndP3(edge[0], p2, edge[1]))) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    private void constructVisibilityGraph() {
-        if (isVisible(startPoint, finishPoint)) {
-            return;
-        }
-
+    public void constructVisibilityGraph() {
         allPoints.add(startPoint);
         allPoints.add(finishPoint);
         int n = 2;      // visibility graph contains start and finish points
         int[] noFlyZoneStartIndices = new int[noFlyZones.length+1];
         for (int i = 0; i < noFlyZones.length; i++) {
-            noFlyZoneStartIndices[i+1] = n;
-            for (var vertex : noFlyZones[i].getVertexCoordinates()) {
-                allPoints.add(vertex);
+            noFlyZoneStartIndices[i] = n;
+            LngLat[] vertexCoordinates = noFlyZones[i].getVertexCoordinates();
+            int m = vertexCoordinates.length;
+            for (int j = 0; j < m; j++) {
                 n++;
+                LngLat[] edge = new LngLat[2];
+                edge[0] = vertexCoordinates[j];
+                edge[1] = vertexCoordinates[(j+1) % m];
+                allPoints.add(edge[0]);
+                allEdges.add(edge);
             }
         }
-        noFlyZoneStartIndices[noFlyZones.length+1] = n;
+        noFlyZoneStartIndices[noFlyZones.length] = n;
+
+        if (isVisible(startPoint, finishPoint)) {
+            return;
+        }
 
         visibilityGraph = new double[n][n];
         for (int i = 0; i < n; i++) {
@@ -109,9 +137,29 @@ public class Flightpath {
         }
     }
 
-    private void findShortestPath() {
+    public void findShortestPath() {
         if (visibilityGraph != null) {
             // find the shortest path in the graph
         }
+    }
+
+    public int getLengthInMoves() {
+        return lengthInMoves;
+    }
+
+    public ArrayList<LngLat> getAllPoints() {
+        return allPoints;
+    }
+
+    public ArrayList<LngLat[]> getAllEdges() {
+        return allEdges;
+    }
+
+    public ArrayList<LngLat> getFlightpathPoints() {
+        return flightpathPoints;
+    }
+
+    public double[][] getVisibilityGraph() {
+        return visibilityGraph;
     }
 }

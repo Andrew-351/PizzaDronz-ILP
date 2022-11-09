@@ -17,6 +17,28 @@ public record LngLat(double lng, double lat) {
             this.lat = lat;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        LngLat lngLat = (LngLat) obj;
+        return lng == lngLat.lng && lat == lngLat.lat;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 29;
+        int result = 1;
+        result = prime * result + ((Double) lng).hashCode();
+        result = prime * result + ((Double) lat).hashCode();
+        return result;
+    }
+
     /**
      * Calculates the distance from the point to another LngLat point.
      * @param lngLat a LngLat point on the map
