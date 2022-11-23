@@ -1,7 +1,8 @@
-package uk.ac.ed.inf.model;
+package uk.ac.ed.inf.movement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.ac.ed.inf.RestServerClient;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NoFlyZone {
+public final class NoFlyZone {
     /**
      * The array of vertices of the no-fly zone polygon.
      */

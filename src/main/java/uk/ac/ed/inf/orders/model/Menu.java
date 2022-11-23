@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.model;
+package uk.ac.ed.inf.orders.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +8,7 @@ import java.util.Map;
  * Representation of a menu in a restaurant.
  */
 
-public class Menu {
+public final class Menu {
 
     /**
      * Representation of a pizza.

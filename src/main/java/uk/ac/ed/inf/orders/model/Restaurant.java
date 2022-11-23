@@ -1,14 +1,15 @@
-package uk.ac.ed.inf.model;
+package uk.ac.ed.inf.orders.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import uk.ac.ed.inf.RestServerClient;
+import uk.ac.ed.inf.movement.model.LngLat;
 import java.util.Map;
 
 /**
  * Representation of a restaurant participating in the scheme.
  */
 
-public class Restaurant {
+public final class Restaurant {
     /**
      * Name of the restaurant.
      */

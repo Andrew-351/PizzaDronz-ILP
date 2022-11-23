@@ -1,13 +1,8 @@
 package uk.ac.ed.inf;
 
 import org.junit.Before;
-import org.junit.Test;
-import uk.ac.ed.inf.model.InvalidPizzaCombinationException;
-import uk.ac.ed.inf.model.Order;
-import uk.ac.ed.inf.model.Restaurant;
-import java.util.ArrayList;
-import java.util.Collections;
-import static org.junit.Assert.*;
+import uk.ac.ed.inf.orders.model.Order;
+import uk.ac.ed.inf.orders.model.Restaurant;
 
 /**
  * Unit tests for Order class.

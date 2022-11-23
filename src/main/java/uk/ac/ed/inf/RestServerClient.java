@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.model;
+package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
