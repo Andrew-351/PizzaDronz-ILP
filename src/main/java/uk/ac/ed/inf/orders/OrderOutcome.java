@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.orders.model;
+package uk.ac.ed.inf.orders;
 
 /**
  * Representation of an outcome of an order.

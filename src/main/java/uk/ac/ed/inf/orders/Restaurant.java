@@ -1,8 +1,8 @@
-package uk.ac.ed.inf.orders.model;
+package uk.ac.ed.inf.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ed.inf.RestServerClient;
-import uk.ac.ed.inf.movement.model.LngLat;
+import uk.ac.ed.inf.movement.LngLat;
 import java.util.Map;
 
 /**

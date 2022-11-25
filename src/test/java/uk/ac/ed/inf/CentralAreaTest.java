@@ -2,8 +2,8 @@ package uk.ac.ed.inf;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.ed.inf.movement.model.CentralArea;
-import uk.ac.ed.inf.movement.model.LngLat;
+import uk.ac.ed.inf.movement.CentralArea;
+import uk.ac.ed.inf.movement.LngLat;
 import static org.junit.Assert.assertArrayEquals;
 
 /**

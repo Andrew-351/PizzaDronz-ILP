@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.orders.model;
+package uk.ac.ed.inf.orders;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -19,7 +19,7 @@ public final class OrderValidator {
      * @param order the order
      * @return OrderOutcome which corresponds to the order
      */
-    public OrderOutcome validateOrder(Order order) {
+    OrderOutcome validateOrder(Order order) {
         if (!areGeneralFieldsValid(order)) {
             return OrderOutcome.Invalid;
         }

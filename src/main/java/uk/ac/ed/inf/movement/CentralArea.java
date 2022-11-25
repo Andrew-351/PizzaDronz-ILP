@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.movement.model;
+package uk.ac.ed.inf.movement;
 
 import uk.ac.ed.inf.RestServerClient;
 
@@ -22,7 +22,6 @@ public record CentralArea(LngLat[] vertexCoordinates) {
      *
      * @return an array of vertices (LngLat points), that form the Central area polygon, in the appropriate order.
      */
-    @Override
     public LngLat[] vertexCoordinates() {
         return vertexCoordinates;
     }

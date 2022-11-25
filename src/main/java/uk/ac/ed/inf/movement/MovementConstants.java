@@ -1,6 +1,4 @@
-package uk.ac.ed.inf.movement.model;
-
-import uk.ac.ed.inf.movement.model.LngLat;
+package uk.ac.ed.inf.movement;
 
 /**
  * Constant values related to the drone's movement.

@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.movement.model;
+package uk.ac.ed.inf.movement;
 
 /**
  * Representation of a compass direction of the drone's move.

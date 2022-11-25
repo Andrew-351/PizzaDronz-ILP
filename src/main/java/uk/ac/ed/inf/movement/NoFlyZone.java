@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.movement.model;
+package uk.ac.ed.inf.movement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,7 +30,7 @@ public final class NoFlyZone {
     /**
      * Static method to get an array of all no-fly zones from server.
      */
-    public static NoFlyZone[] getNoFlyZonesFromRestServer() {
+    static NoFlyZone[] getNoFlyZonesFromRestServer() {
         return (NoFlyZone[]) RestServerClient.getDataFromServer(
                 RestServerClient.BASE_URL + RestServerClient.NO_FLY_ZONES_ENDPOINT, NoFlyZone[].class);
     }

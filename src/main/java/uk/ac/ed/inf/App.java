@@ -26,13 +26,7 @@ public class App {
         }
         try {
             DroneController droneController = new DroneController(date, baseUrlString, seed);
-
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate orderDate = LocalDate.parse("2023-04-29", dateFormatter);
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-            YearMonth expiryDate = YearMonth.parse("04/23", formatter);
-            System.out.println(orderDate.isBefore(expiryDate.atEndOfMonth()));
+            droneController.startSession();
 
 
         } catch (NullPointerException e) {

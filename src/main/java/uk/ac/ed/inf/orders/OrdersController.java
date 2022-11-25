@@ -1,14 +1,19 @@
 package uk.ac.ed.inf.orders;
 
-import uk.ac.ed.inf.orders.model.*;
+import uk.ac.ed.inf.orders.view.DeliveriesView;
+
 import java.util.*;
 
 public final class OrdersController {
+    private final String date;
     private final LinkedHashMap<Order, OrderOutcome> orderAndOutcomeMap = new LinkedHashMap<>();
     private final HashMap<Restaurant, ArrayList<Order>> restaurantAndOrdersMap = new HashMap<>();
     private final OrderValidator validator;
+    private final ArrayList<Delivery> deliveries = new ArrayList<>();
+    private final DeliveriesView deliveriesView = new DeliveriesView();
 
     public OrdersController(String date) throws NullPointerException {
+        this.date = date;
         Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer();
         if (restaurants == null || restaurants.length == 0) {
             throw new NullPointerException("No restaurants data retrieved from server.");
@@ -52,7 +57,21 @@ public final class OrdersController {
         return restaurantsWithOrders;
     }
 
-    public void deliverOrder(Restaurant restaurant, Order order) {
+    public void orderDelivered(Order order) {
+        orderAndOutcomeMap.replace(order, OrderOutcome.Delivered);
+    }
 
+    public void setDeliveries() {
+        for (var entry : orderAndOutcomeMap.entrySet()) {
+            String orderNo = entry.getKey().orderNo();
+            OrderOutcome outcome = entry.getValue();
+            int cost = entry.getKey().priceTotalInPence();
+
+            deliveries.add(new Delivery(orderNo, outcome, cost));
+        }
+    }
+
+    public void outputDeliveries() {
+        deliveriesView.createDeliveriesFile(date, deliveries);
     }
 }

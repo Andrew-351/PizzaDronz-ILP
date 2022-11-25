@@ -1,14 +1,13 @@
-package uk.ac.ed.inf.movement.model;
+package uk.ac.ed.inf.movement;
 
 import java.util.ArrayList;
 
 /**
  * Representation of a path between two points (e.g. Appleton Tower and a Restaurant).
  */
-public class Flightpath {
+public final class Flightpath {
     private final LngLat startPoint;
     private final LngLat finishPoint;
-    private final CentralArea centralArea;
     private final NoFlyZone[] noFlyZones;
     private final ArrayList<LngLat> allPoints = new ArrayList<>();
     private final ArrayList<LngLat[]> allEdges = new ArrayList<>();
@@ -21,10 +20,9 @@ public class Flightpath {
      */
     private double[][] visibilityGraph;
 
-    public Flightpath(LngLat startPoint, LngLat finishPoint, CentralArea centralArea, NoFlyZone[] noFlyZones) {
+    public Flightpath(LngLat startPoint, LngLat finishPoint, NoFlyZone[] noFlyZones) {
         this.startPoint = startPoint;
         this.finishPoint = finishPoint;
-        this.centralArea = centralArea;
         this.noFlyZones = noFlyZones;
         approximatePoints.add(startPoint);
         approximatePoints.add(finishPoint);
@@ -75,7 +73,7 @@ public class Flightpath {
         return true;
     }
 
-    public void constructVisibilityGraph() {
+    private void constructVisibilityGraph() {
         if (noFlyZones == null) {
             return;
         }
@@ -140,12 +138,8 @@ public class Flightpath {
 
                 if (edgeExists) {
                     double distance = allPoints.get(i).distanceTo(allPoints.get(j));
-                    if (!allPoints.get(i).inCentralArea(centralArea) || allPoints.get(j).inCentralArea(centralArea)) {
-                        visibilityGraph[i][j] = distance;
-                    }
-                    if (!allPoints.get(j).inCentralArea(centralArea) || allPoints.get(i).inCentralArea(centralArea)) {
-                        visibilityGraph[j][i] = distance;
-                    }
+                    visibilityGraph[i][j] = distance;
+                    visibilityGraph[j][i] = distance;
                 }
             }
         }
@@ -163,7 +157,7 @@ public class Flightpath {
         return minDistanceVertex;
     }
 
-    public void findShortestPath() {
+    void findShortestPath() {
         constructVisibilityGraph();
         // if visibilityGraph == null => there are only two points - start and finish
         if (visibilityGraph == null) {
@@ -203,7 +197,7 @@ public class Flightpath {
 
     }
 
-    public void optimiseFlightpath() {
+    void optimiseFlightpath() {
         if (visibilityGraph == null) {
             return;
         }
@@ -245,7 +239,7 @@ public class Flightpath {
         return bestNextPoint;
     }
 
-    public void calculateMovesPoints() {
+    void calculateMovesPoints() {
         LngLat currentPoint = approximatePoints.get(0);
         droneMovesPoints.add(currentPoint);
         for (int i = 0; i < approximatePoints.size() - 1; i++) {
@@ -269,9 +263,5 @@ public class Flightpath {
 
     public ArrayList<CompassDirection> getDroneMovesDirections() {
         return droneMovesDirections;
-    }
-
-    public ArrayList<LngLat> getApproximatePoints() {
-        return approximatePoints;
     }
 }

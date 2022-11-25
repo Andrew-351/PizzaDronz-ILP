@@ -1,7 +1,7 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
-import uk.ac.ed.inf.orders.model.Restaurant;
+import uk.ac.ed.inf.orders.Restaurant;
 import static org.junit.Assert.assertNotNull;
 
 /**
