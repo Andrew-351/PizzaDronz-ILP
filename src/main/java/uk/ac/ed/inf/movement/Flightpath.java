@@ -218,25 +218,57 @@ public final class Flightpath {
         }
     }
 
+    /**
+     * Find the best next point for the drone to go to when connecting two approximate points of the flightpath.
+     * If possible, always try to find a point from which current goal would remain visible.
+     * If impossible, just return a point which minimises the distance to the current goal.
+     *
+     * @param currentPoint current position of the drone
+     * @param nextApproximatePoint current goal that is trying to be reached (either a no-fly zone vertex or the restaurant)
+     * @return the best point for the drone to go to as its next move
+     */
     private LngLat findNextPoint(LngLat currentPoint, LngLat nextApproximatePoint) {
-        double distanceToNextPoint = Double.MAX_VALUE;
-        LngLat bestNextPoint = null;
+        double minDistanceToGoal = Double.MAX_VALUE;
+        LngLat bestPoint = null;
         CompassDirection bestDirection = null;
+
+        double minDistanceToGoalWithGoalVisible = currentPoint.distanceTo(nextApproximatePoint);
+        LngLat bestPointWithGoalVisible = null;
+        CompassDirection bestDirectionWithGoalVisible = null;
+
         for (var direction : CompassDirection.values()) {
             if (direction == CompassDirection.HOVER) {
                 continue;
             }
             LngLat nextPoint = currentPoint.nextPosition(direction);
-            if (isVisible(currentPoint, nextPoint) &&
-                    nextPoint.distanceTo(nextApproximatePoint) < distanceToNextPoint) {
-                bestNextPoint = nextPoint;
-                bestDirection = direction;
-                distanceToNextPoint = nextPoint.distanceTo(nextApproximatePoint);
+
+            // Only consider next points by reaching which the drone doesn't cross a no-fly zone edge.
+            if (isVisible(currentPoint, nextPoint)) {
+                double distanceToGoal = nextPoint.distanceTo(nextApproximatePoint);
+
+                // Find the best next point from which the current goal would be visible.
+                if (isVisible(nextPoint, nextApproximatePoint) &&
+                        distanceToGoal < minDistanceToGoalWithGoalVisible) {
+                    bestPointWithGoalVisible = nextPoint;
+                    bestDirectionWithGoalVisible = direction;
+                    minDistanceToGoalWithGoalVisible = distanceToGoal;
+                }
+
+                // Find the best next point that just minimises the distance to the current goal.
+                if (distanceToGoal < minDistanceToGoal) {
+                    bestPoint = nextPoint;
+                    bestDirection = direction;
+                    minDistanceToGoal = distanceToGoal;
+                }
             }
         }
-        droneMovesPoints.add(bestNextPoint);
+        if (bestPointWithGoalVisible != null) {
+            bestPoint = bestPointWithGoalVisible;
+            bestDirection = bestDirectionWithGoalVisible;
+        }
+        droneMovesPoints.add(bestPoint);
         droneMovesDirections.add(bestDirection);
-        return bestNextPoint;
+        return bestPoint;
     }
 
     void calculateMovesPoints() {
@@ -244,16 +276,17 @@ public final class Flightpath {
         droneMovesPoints.add(currentPoint);
         for (int i = 0; i < approximatePoints.size() - 1; i++) {
             LngLat nextApproximatePoint = approximatePoints.get(i + 1);
+            System.out.println("currentPoint = " + currentPoint);
             while (!currentPoint.closeTo(nextApproximatePoint)) {
                 currentPoint = findNextPoint(currentPoint, nextApproximatePoint);
             }
-            /*
-             If the drone can't turn over the corner,
-             move one more time, this will guarantee the next point is visible.
-            */
-            if (i != approximatePoints.size() - 2 && !isVisible(currentPoint, approximatePoints.get(i + 1))) {
-                currentPoint = findNextPoint(currentPoint, nextApproximatePoint);
-            }
+//            /*
+//             If the drone can't turn over the corner,
+//             move one more time, this will guarantee the next point is visible.
+//            */
+//            if (i != approximatePoints.size() - 2 && !isVisible(currentPoint, approximatePoints.get(i + 1))) {
+//                currentPoint = findNextPoint(currentPoint, nextApproximatePoint);
+//            }
         }
     }
 

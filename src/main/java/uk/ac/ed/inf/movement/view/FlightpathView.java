@@ -30,9 +30,9 @@ public class FlightpathView {
             LineString lineString = LineString.fromLngLats(coordinates);
             FeatureCollection featureCollection = FeatureCollection.fromFeature(Feature.fromGeometry(lineString));
             String fileName = "drone-" + date + ".geojson";
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName, false);
-            fileOutputStream.write(featureCollection.toJson().getBytes());
-
+            try (FileOutputStream fileOutputStream = new FileOutputStream(fileName, false)) {
+                fileOutputStream.write(featureCollection.toJson().getBytes());
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

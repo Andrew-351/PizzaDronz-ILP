@@ -3,6 +3,7 @@ package uk.ac.ed.inf.movement;
 import uk.ac.ed.inf.movement.view.FlightpathView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public final class MovementController {
     private final String date;

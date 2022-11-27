@@ -118,7 +118,7 @@ public final class DroneController {
 
         for (int i = 0; i < movesDirections.size(); i++) {
             CompassDirection direction = movesDirections.get(i);
-            Double angle = (direction == CompassDirection.HOVER) ? null : direction.getAngle();
+            Double angle = direction.getAngle();
             long ticks = System.nanoTime() - computationStart;
             droneMovesForFlightpath.add(new DroneMove(order.orderNo(),
                                          movesPoints.get(i).lng(),

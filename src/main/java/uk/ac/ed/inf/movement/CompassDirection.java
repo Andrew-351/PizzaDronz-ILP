@@ -107,7 +107,7 @@ public enum CompassDirection {
      * Returns an angle in degrees corresponding to the compass direction.
      * @return an angle in degrees corresponding to the compass direction.
      */
-    public double getAngle() {
+    public Double getAngle() {
         return angle;
     }
 
