@@ -31,24 +31,24 @@ public class LngLatTest {
 
     @Test
     public void inCentralAreaNo() {
-        assertFalse(pointNotInCentralArea.inCentralArea(centralArea));
+        assertFalse(pointNotInCentralArea.inArea(centralArea));
     }
 
     @Test
     public void inCentralAreaYes() {
-        assertTrue(pointInCentralArea.inCentralArea(centralArea));
+        assertTrue(pointInCentralArea.inArea(centralArea));
     }
 
     @Test
     public void inCentralAreaYesOnTheEdge() {
         LngLat point = new LngLat(-3.192473, 55.945);
-        assertTrue(point.inCentralArea(centralArea));
+        assertTrue(point.inArea(centralArea));
     }
 
     @Test
     public void inCentralAreaYesInTheCorner() {
         LngLat point = new LngLat(-3.184319, 55.942617);
-        assertTrue(point.inCentralArea(centralArea));
+        assertTrue(point.inArea(centralArea));
     }
 
     @Test

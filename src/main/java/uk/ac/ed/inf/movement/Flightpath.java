@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.movement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Representation of a path between two points (e.g. Appleton Tower and a Restaurant).
@@ -197,6 +198,17 @@ public final class Flightpath {
 
     }
 
+    private boolean isLineOutsideNoFlyZone(LngLat p1, LngLat p2) {
+        LngLat midPoint = new LngLat((p1.lng() + p2.lng()) / 2, (p1.lat() + p2.lat()) / 2);
+        for (var zone : noFlyZones) {
+            if (Arrays.asList(zone.getVertexCoordinates()).contains(p1) &&
+                Arrays.asList(zone.getVertexCoordinates()).contains(p2)) {
+                return !midPoint.inArea(zone);
+            }
+        }
+        return true;
+    }
+
     void optimiseFlightpath() {
         if (visibilityGraph == null) {
             return;
@@ -206,7 +218,8 @@ public final class Flightpath {
         while (nextPoint < approximatePoints.size() - 2) {
             LngLat currentPoint = approximatePoints.get(nextPoint);
             for (int i = approximatePoints.size() - 1; i > nextPoint; i--) {
-                if (isVisible(currentPoint, approximatePoints.get(i))) {
+                if (isVisible(currentPoint, approximatePoints.get(i)) &&
+                        isLineOutsideNoFlyZone(currentPoint, approximatePoints.get(i))) {
                     int numberOfPointsToRemove = i - nextPoint - 1;
                     while (numberOfPointsToRemove > 0) {
                         approximatePoints.remove(nextPoint + 1);
@@ -247,8 +260,7 @@ public final class Flightpath {
                 double distanceToGoal = nextPoint.distanceTo(nextApproximatePoint);
 
                 // Find the best next point from which the current goal would be visible.
-                if (isVisible(nextPoint, nextApproximatePoint) &&
-                        distanceToGoal < minDistanceToGoalWithGoalVisible) {
+                if (isVisible(nextPoint, nextApproximatePoint) && distanceToGoal < minDistanceToGoalWithGoalVisible) {
                     bestPointWithGoalVisible = nextPoint;
                     bestDirectionWithGoalVisible = direction;
                     minDistanceToGoalWithGoalVisible = distanceToGoal;
@@ -276,17 +288,16 @@ public final class Flightpath {
         droneMovesPoints.add(currentPoint);
         for (int i = 0; i < approximatePoints.size() - 1; i++) {
             LngLat nextApproximatePoint = approximatePoints.get(i + 1);
-            System.out.println("currentPoint = " + currentPoint);
             while (!currentPoint.closeTo(nextApproximatePoint)) {
                 currentPoint = findNextPoint(currentPoint, nextApproximatePoint);
             }
-//            /*
-//             If the drone can't turn over the corner,
-//             move one more time, this will guarantee the next point is visible.
-//            */
-//            if (i != approximatePoints.size() - 2 && !isVisible(currentPoint, approximatePoints.get(i + 1))) {
-//                currentPoint = findNextPoint(currentPoint, nextApproximatePoint);
-//            }
+            /*
+             If the drone is close to its current goal but cannot see it, move as manu times
+             as necessary so that the next point is visible.
+            */
+            while (!isVisible(currentPoint, nextApproximatePoint)) {
+                currentPoint = findNextPoint(currentPoint, nextApproximatePoint);
+            }
         }
     }
 

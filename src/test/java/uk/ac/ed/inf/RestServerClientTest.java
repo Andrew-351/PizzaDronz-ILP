@@ -32,7 +32,7 @@ public class RestServerClientTest {
         LngLat[] vertices = (LngLat[]) RestServerClient.getDataFromServer(
                 RestServerClient.BASE_URL + RestServerClient.CENTRAL_AREA_ENDPOINT, LngLat[].class);
         assertNotNull(vertices);
-        assertArrayEquals(centralArea.vertexCoordinates(), vertices);
+        assertArrayEquals(centralArea.getVertexCoordinates(), vertices);
 
     }
 }

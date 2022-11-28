@@ -50,16 +50,16 @@ public record LngLat(double lng, double lat) {
 
     /**
      * Determines if the LngLat point is within the Central area.
-     * @param centralArea the Central Area
+     * @param area the Central Area or any of the no-fly zones
      * @return true if the point is within the Central area; false otherwise.
      */
-    public boolean inCentralArea(CentralArea centralArea) {
-        if (centralArea == null) {
+    public boolean inArea(Area area) {
+        if (area == null) {
             return false;
         }
 
         boolean oddEdgesCrossedOnTheLeft = false;
-        LngLat[] coordinates = centralArea.vertexCoordinates();
+        LngLat[] coordinates = area.getVertexCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             double x1 = coordinates[i].lng;
             double y1 = coordinates[i].lat;

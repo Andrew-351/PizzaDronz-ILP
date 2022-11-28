@@ -26,7 +26,7 @@ public class CentralAreaTest {
         coordinates[2] = new LngLat(-3.184319, 55.942617);
         coordinates[3] = new LngLat(-3.184319, 55.946233);
 
-        assertArrayEquals(coordinates, centralArea.vertexCoordinates());
+        assertArrayEquals(coordinates, centralArea.getVertexCoordinates());
     }
 
 }
