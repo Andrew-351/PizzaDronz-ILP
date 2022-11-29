@@ -51,14 +51,6 @@ public final class Restaurant {
     }
 
     /**
-     * Returns the name of the restaurant.
-     * @return the name of the restaurant.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Returns the location of the restaurant.
      * @return the location of the restaurant.
      */

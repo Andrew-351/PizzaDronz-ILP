@@ -4,7 +4,7 @@ package uk.ac.ed.inf.movement;
  * Constant values related to the drone's movement.
  */
 
-public final class MovementConstants {
+public abstract class MovementConstants {
     /**
      * Distance tolerance to consider if two LngLat points are "close" to one another.
      */
@@ -18,7 +18,7 @@ public final class MovementConstants {
     /**
      * The number of moves the drone can make before it runs out of battery.
      */
-    public final static int MAXIMUM_MOVES = 2000;
+    public final static int MAXIMUM_MOVES = 3000;
 
     /**
      * The coordinates (LngLat point) of Appleton Tower.

@@ -1,9 +1,7 @@
 package uk.ac.ed.inf.movement;
 
 import uk.ac.ed.inf.movement.view.FlightpathView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public final class MovementController {
     private final String date;
@@ -16,22 +14,13 @@ public final class MovementController {
     public MovementController(String date) {
         centralArea = CentralArea.getCentralAreaFromRestServer();
         noFlyZones = NoFlyZone.getNoFlyZonesFromRestServer();
-//        noFlyZones[3] = new NoFlyZone(new ArrayList<>(Arrays.asList(
-//                new ArrayList<>(Arrays.asList(-3.192, 55.945)),
-//                new ArrayList<>(Arrays.asList(-3.192, 55.9435)),
-//                new ArrayList<>(Arrays.asList(-3.19114, 55.9435)),
-//                new ArrayList<>(Arrays.asList(-3.19069, 55.9436)),
-//                new ArrayList<>(Arrays.asList(-3.1912, 55.9437)),
-//                new ArrayList<>(Arrays.asList(-3.1907, 55.9456)),
-//                new ArrayList<>(Arrays.asList(-3.192, 55.945))
-//        )));
         deliveryPoint = MovementConstants.APPLETON_TOWER;
         this.date = date;
     }
 
     // Calculate flightpath to a certain restaurant.
     public Flightpath calculateShortestFlightpathToRestaurant(LngLat restaurantLocation) {
-        Flightpath flightpath = new Flightpath(deliveryPoint, restaurantLocation, noFlyZones);
+        Flightpath flightpath = new Flightpath(deliveryPoint, restaurantLocation, centralArea, noFlyZones);
         flightpath.findShortestPath();
         flightpath.optimiseFlightpath();
         flightpath.calculateMovesPoints();

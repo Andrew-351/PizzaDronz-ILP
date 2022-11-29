@@ -2,7 +2,7 @@ package uk.ac.ed.inf.movement;
 
 import java.util.List;
 
-public class Area {
+public abstract class Area {
     /**
      * The array of vertices of the area polygon.
      */

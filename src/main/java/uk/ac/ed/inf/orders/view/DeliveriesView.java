@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DeliveriesView {
+public final class DeliveriesView {
     public void createDeliveriesFile(String date, ArrayList<Delivery> deliveries) {
         try {
             String fileName = "deliveries-" + date + ".json";

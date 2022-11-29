@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class NoFlyZone extends Area{
+public final class NoFlyZone extends Area {
     /**
      * Creates an instance of the NoFlyZone class.
      * @param vertexCoordinates coordinates of the vertices of the no-fly zone.

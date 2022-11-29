@@ -9,6 +9,7 @@ import java.util.Arrays;
 public final class Flightpath {
     private final LngLat startPoint;
     private final LngLat finishPoint;
+    private final CentralArea centralArea;
     private final NoFlyZone[] noFlyZones;
     private final ArrayList<LngLat> allPoints = new ArrayList<>();
     private final ArrayList<LngLat[]> allEdges = new ArrayList<>();
@@ -21,9 +22,10 @@ public final class Flightpath {
      */
     private double[][] visibilityGraph;
 
-    public Flightpath(LngLat startPoint, LngLat finishPoint, NoFlyZone[] noFlyZones) {
+    public Flightpath(LngLat startPoint, LngLat finishPoint, CentralArea centralArea, NoFlyZone[] noFlyZones) {
         this.startPoint = startPoint;
         this.finishPoint = finishPoint;
+        this.centralArea = centralArea;
         this.noFlyZones = noFlyZones;
         approximatePoints.add(startPoint);
         approximatePoints.add(finishPoint);
@@ -231,6 +233,10 @@ public final class Flightpath {
         }
     }
 
+    private boolean centralAreaConditionViolated(LngLat from, LngLat to) {
+        return !from.inArea(centralArea) && to.inArea(centralArea);
+    }
+
     /**
      * Find the best next point for the drone to go to when connecting two approximate points of the flightpath.
      * If possible, always try to find a point from which current goal would remain visible.
@@ -255,8 +261,9 @@ public final class Flightpath {
             }
             LngLat nextPoint = currentPoint.nextPosition(direction);
 
-            // Only consider next points by reaching which the drone doesn't cross a no-fly zone edge.
-            if (isVisible(currentPoint, nextPoint)) {
+            // Only consider next points by reaching which the drone doesn't cross a no-fly zone edge
+            // or does not re-enter the central area (since we are calculating the flightpath from AT to a restaurant).
+            if (isVisible(currentPoint, nextPoint) && !centralAreaConditionViolated(currentPoint, nextPoint)) {
                 double distanceToGoal = nextPoint.distanceTo(nextApproximatePoint);
 
                 // Find the best next point from which the current goal would be visible.

@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class FlightpathView {
+public final class FlightpathView {
     public void createFlightpathFile(String date, ArrayList<DroneMove> droneMoves) {
         try {
             String fileName = "flightpath-" + date + ".json";

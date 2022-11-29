@@ -7,7 +7,7 @@ import uk.ac.ed.inf.RestServerClient;
  *
  */
 
-public class CentralArea extends Area {
+public final class CentralArea extends Area {
     public CentralArea(LngLat[] vertexCoordinates) {
         super(vertexCoordinates);
     }

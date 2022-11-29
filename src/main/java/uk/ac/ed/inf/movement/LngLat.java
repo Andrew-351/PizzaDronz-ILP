@@ -49,9 +49,9 @@ public record LngLat(double lng, double lat) {
     }
 
     /**
-     * Determines if the LngLat point is within the Central area.
+     * Determines if the LngLat point is within an area (Central or no-fly zone).
      * @param area the Central Area or any of the no-fly zones
-     * @return true if the point is within the Central area; false otherwise.
+     * @return true if the point is within the area; false otherwise.
      */
     public boolean inArea(Area area) {
         if (area == null) {
