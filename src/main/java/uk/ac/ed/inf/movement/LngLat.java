@@ -11,6 +11,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record LngLat(double lng, double lat) {
+    /**
+     * Distance tolerance to consider if two LngLat points are "close" to one another.
+     */
+    private static final double DISTANCE_TOLERANCE = 0.00015;
+
+    /**
+     * Length of a single move of the drone in one direction (in degrees).
+     */
+    private final static double MOVE_LENGTH = 0.00015;
+
 
     public LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latitude") double lat) {
             this.lng = lng;
@@ -98,7 +108,7 @@ public record LngLat(double lng, double lat) {
      * @return true if THIS point is "close" to the parameter point; false otherwise.
      */
     public boolean closeTo(LngLat lngLat) {
-        return distanceTo(lngLat) < MovementConstants.DISTANCE_TOLERANCE;
+        return distanceTo(lngLat) < DISTANCE_TOLERANCE;
     }
 
     /**
@@ -111,7 +121,7 @@ public record LngLat(double lng, double lat) {
             return this;
         }
         return new LngLat (
-            lng + MovementConstants.MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
-            lat + MovementConstants.MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
+            lng + MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
+            lat + MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
     }
 }

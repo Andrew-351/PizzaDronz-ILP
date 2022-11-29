@@ -3,12 +3,12 @@ package uk.ac.ed.inf;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
  * PizzaDronz Project (Informatics Large Practical).
+ * The application to control a drone delivering pizzas to Appleton Tower from different restaurants in Edinburgh.
  *
  */
 public class App {
@@ -45,10 +45,10 @@ public class App {
         try {
             // Verify the date
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.parse(date, formatter);
+            LocalDate.parse(date, formatter);
 
             // Verify the URL
-            URL baseUrl = new URL(baseUrlString);
+            new URL(baseUrlString);
         } catch (DateTimeParseException e) {
             System.err.println("Invalid date format provided - must be YYYY-MM-DD.");
             return false;

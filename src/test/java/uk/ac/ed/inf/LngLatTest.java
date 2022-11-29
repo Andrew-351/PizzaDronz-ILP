@@ -4,7 +4,6 @@ import org.junit.Test;
 import uk.ac.ed.inf.movement.CentralArea;
 import uk.ac.ed.inf.movement.CompassDirection;
 import uk.ac.ed.inf.movement.LngLat;
-import uk.ac.ed.inf.movement.MovementConstants;
 import static org.junit.Assert.*;
 
 /**
@@ -70,7 +69,7 @@ public class LngLatTest {
 
     @Test
     public void nextPositionTestSouth() {
-        assertEquals(new LngLat(pointInCentralArea.lng(), pointInCentralArea.lat() - MovementConstants.MOVE_LENGTH), pointInCentralArea.nextPosition(CompassDirection.S));
+        assertEquals(new LngLat(pointInCentralArea.lng(), pointInCentralArea.lat() - 0.00015), pointInCentralArea.nextPosition(CompassDirection.S));
     }
 
     @Test
