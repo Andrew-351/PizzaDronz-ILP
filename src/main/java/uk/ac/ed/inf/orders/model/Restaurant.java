@@ -1,21 +1,16 @@
 package uk.ac.ed.inf.orders.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ed.inf.RestServerClient;
 import uk.ac.ed.inf.movement.model.LngLat;
-
 import java.util.Map;
 
 /**
  * Representation of a restaurant participating in the scheme.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Restaurant {
-    /**
-     * Name of the restaurant.
-     */
-    private final String name;
-
     /**
      * Location (LngLat point) of the restaurant.
      */
@@ -28,16 +23,13 @@ public final class Restaurant {
 
     /**
      * Creates an instance of a Restaurant class.
-     * @param name name of the restaurant
      * @param longitude longitude (first coordinate of location) of the restaurant
      * @param latitude latitude (second coordinate of location) of the restaurant
      * @param menu menu of the restaurant
      */
-    public Restaurant(@JsonProperty("name") String name,
-                      @JsonProperty("longitude") double longitude,
+    public Restaurant(@JsonProperty("longitude") double longitude,
                       @JsonProperty("latitude") double latitude,
                       @JsonProperty("menu") Map<String, Object>[] menu) {
-        this.name = name;
         this.location = new LngLat(longitude, latitude);
         this.menu = new Menu(menu);
     }
