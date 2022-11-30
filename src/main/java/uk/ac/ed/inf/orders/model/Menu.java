@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.orders;
+package uk.ac.ed.inf.orders.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;

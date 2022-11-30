@@ -1,8 +1,8 @@
 package uk.ac.ed.inf;
 
 import org.junit.Before;
-import uk.ac.ed.inf.orders.Order;
-import uk.ac.ed.inf.orders.Restaurant;
+import uk.ac.ed.inf.orders.model.Order;
+import uk.ac.ed.inf.orders.model.Restaurant;
 
 /**
  * Unit tests for Order class.

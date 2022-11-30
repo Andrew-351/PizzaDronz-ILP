@@ -1,13 +1,16 @@
-package uk.ac.ed.inf.movement.view;
+package uk.ac.ed.inf.movement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapbox.geojson.*;
-import uk.ac.ed.inf.movement.DroneMove;
+import uk.ac.ed.inf.movement.model.DroneMove;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public final class FlightpathView {
+/**
+ * A view class responsible for outputting resulting data relating to drone's movement.
+ */
+public final class MovementView {
     public void createFlightpathFile(String date, ArrayList<DroneMove> droneMoves) {
         try {
             String fileName = "flightpath-" + date + ".json";

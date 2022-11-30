@@ -1,148 +1,79 @@
 package uk.ac.ed.inf;
 
-import uk.ac.ed.inf.movement.*;
-import uk.ac.ed.inf.orders.*;
+import uk.ac.ed.inf.movement.MovementController;
+import uk.ac.ed.inf.movement.model.DroneMove;
+import uk.ac.ed.inf.movement.model.Flightpath;
+import uk.ac.ed.inf.orders.OrdersController;
+import uk.ac.ed.inf.orders.model.Order;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+/**
+ * The drone controller keeps track of and controls all aspects of the drone-based pizza delivery system.
+ * It also has functionality which requires using different components of the system (sub-packages).
+ */
 public final class DroneController {
     private final MovementController movementController;
     private final OrdersController ordersController;
-    private final String date;
-    private final String seed;
+    private final DroneModel droneModel;
 
-    private HashMap<Restaurant, ArrayList<Order>> restaurantsAndOrders;
-    private final HashMap<Restaurant, Flightpath> flightpathsToRestaurants = new HashMap<>();
-    private final ArrayList<Restaurant> orderOfRestaurantsByDistance = new ArrayList<>();
-    private final ArrayList<DroneMove> droneMoves = new ArrayList<>();
-    private final long computationStart;
 
-    public DroneController(String date, String serverBaseUrl, String seed) throws NullPointerException {
+    /**
+     * Creates an instance of DroneController class.
+     * @param date a date on which orders are to be delivered
+     * @param serverBaseUrl the base address of the server where to retrieve the data from
+     * @throws NullPointerException if the ordersController throws NullPointerException after not having received
+     * some data from the server
+     */
+    public DroneController(String date, String serverBaseUrl) throws NullPointerException {
         RestServerClient.setBaseUrl(serverBaseUrl);
-        this.date = date;
-        this.seed = seed;
-        movementController = new MovementController(date);
+        movementController = new MovementController();
         ordersController = new OrdersController(date);
-        computationStart = System.nanoTime();
-//        f.constructVisibilityGraph();
-//
-//        System.out.print("     ");
-//        for (int i = 0; i < 27; i++) {
-//            System.out.print(String.format("%02d", i) + "  ");
-//        }
-//        System.out.println();
-//        System.out.println("-".repeat(90));
-//        double[][] visibilityGraph = f.getVisibilityGraph();
-//        for (int j = 0; j < visibilityGraph.length; j++) {
-//            System.out.print(String.format("%02d", j) + " | ");
-//            double[] row = visibilityGraph[j];
-//            for (int i = 0; i < row.length; i++) {
-//                String s = ((Double) row[i]).toString();
-//                System.out.print(s.substring(s.length() - 3) + " ");
-//            }
-//            System.out.println();
-//        }
-//        System.out.println(f.getAllPoints().size());
-//        f.findShortestPath();
-//        System.out.println(f.getFlightpathPoints());
-//        f.optimiseFlightpath();
-//        System.out.println(f.getFlightpathPoints());
-//
-//        f.calculateMovesPoints();
-//        ArrayList<LngLat> points = f.getDroneMovesPoints();
-//        ArrayList<CompassDirection> dirs = f.getDroneMovesDirections();
-//        int n = points.size();
-//        System.out.println(n);
-//        System.out.println("\nMoves------------------");
-//        for (int i = 0; i < n-1; i++) {
-//            System.out.println(points.get(i) + " --> " + dirs.get(i));
-//        }
-//        System.out.println(points.get(n-1));
+        droneModel = new DroneModel(date);
     }
 
+    /**
+     * Launches the drone-based pizza delivery system.
+     */
     public void startSession() {
-        ordersController.validateOrders();
-        ordersController.allocateOrdersToRestaurants();
-        restaurantsAndOrders = ordersController.getRestaurantsWithOrders();
-        for (var restaurant : restaurantsAndOrders.keySet()) {
-            flightpathsToRestaurants.put(
+        droneModel.setRestaurantsAndOrders(ordersController.getRestaurantsWithValidOrders());
+
+        // For each restaurant from which there are orders on a given date, calculate the shortest flightpath.
+        for (var restaurant : droneModel.getRestaurantsAndOrders().keySet()) {
+            droneModel.recordFlightpathToRestaurant(
                     restaurant,
-                    movementController.calculateShortestFlightpathToRestaurant(restaurant.getLocation())
+                    movementController.getFlightpathToRestaurant(restaurant.getLocation())
             );
         }
-        setOrderOfRestaurantsByDistance();
+
+        droneModel.sortRestaurantsByDistance();
         deliverOrders();
-        ordersController.setDeliveries();
 
-        ordersController.outputDeliveries();
-        movementController.outputDroneMoves(droneMoves);
+        // Create output files with the information about deliveries and drone's flightpath for a given date.
+        ordersController.outputDeliveries(droneModel.getDate());
+        movementController.outputDroneMoves(droneModel.getDate(), droneModel.getDroneMoves());
     }
 
-    private void setOrderOfRestaurantsByDistance() {
-        HashMap<Restaurant, Integer> distancesToRestaurants = new HashMap<>();
-        for (var restaurant : flightpathsToRestaurants.keySet()) {
-            distancesToRestaurants.put(restaurant, flightpathsToRestaurants.get(restaurant).getDroneMovesDirections().size());
-        }
-        while (!distancesToRestaurants.isEmpty()) {
-            Restaurant nextNearestRestaurant = null;
-            int minDistance = Integer.MAX_VALUE;
-            for (var entry : distancesToRestaurants.entrySet()) {
-                if (entry.getValue() < minDistance) {
-                    nextNearestRestaurant = entry.getKey();
-                    minDistance = entry.getValue();
-                }
-            }
-            orderOfRestaurantsByDistance.add(nextNearestRestaurant);
-            distancesToRestaurants.remove(nextNearestRestaurant);
-        }
-    }
-
-    private ArrayList<DroneMove> generateMovesForFlightpath(Flightpath flightpath, Order order) {
-        ArrayList<DroneMove> droneMovesForFlightpath = new ArrayList<>();
-        ArrayList<LngLat> movesPoints = new ArrayList<>(flightpath.getDroneMovesPoints());
-
-        LngLat firstPoint = movesPoints.get(0);
-        int pointsSize = movesPoints.size();
-        for (int i = pointsSize - 1; i >= 0; i--) {
-            movesPoints.add(flightpath.getDroneMovesPoints().get(i));
-        }
-        movesPoints.add(firstPoint);
-
-        ArrayList<CompassDirection> movesDirections = new ArrayList<>(flightpath.getDroneMovesDirections());
-        int directionsSize = movesDirections.size();
-        movesDirections.add(CompassDirection.HOVER);
-        for (int i = directionsSize - 1; i >= 0; i--) {
-            movesDirections.add(flightpath.getDroneMovesDirections().get(i).getOppositeDirection());
-        }
-        movesDirections.add(CompassDirection.HOVER);
-
-        for (int i = 0; i < movesDirections.size(); i++) {
-            CompassDirection direction = movesDirections.get(i);
-            Double angle = direction.getAngle();
-            long ticks = System.nanoTime() - computationStart;
-            droneMovesForFlightpath.add(new DroneMove(order.orderNo(),
-                                         movesPoints.get(i).lng(),
-                                         movesPoints.get(i).lat(),
-                                         angle,
-                                         movesPoints.get(i+1).lng(),
-                                         movesPoints.get(i+1).lat(),
-                                         ticks));
-        }
-
-        return droneMovesForFlightpath;
-    }
-
+    /**
+     * Delivers orders from the restaurants while the drone's battery is not exhausted.
+     */
     private void deliverOrders() {
-        for (var restaurant : orderOfRestaurantsByDistance) {
-            Flightpath flightpath = flightpathsToRestaurants.get(restaurant);
-            ArrayList<Order> orders = restaurantsAndOrders.get(restaurant);
+        // Go over the restaurants in the order "from the nearest to the farthest".
+        for (var restaurant : droneModel.getOrderOfRestaurantsByDistance()) {
+            // Flightpath to currently the nearest restaurant.
+            Flightpath flightpath = droneModel.getFlightpathsToRestaurants().get(restaurant);
+
+            // All valid but not yet delivered orders from the restaurant.
+            ArrayList<Order> orders = droneModel.getRestaurantsAndOrders().get(restaurant);
             for (var order : orders) {
+                // If the battery charge is insufficient to deliver the order, stay.
                 if (!movementController.enoughMovesLeft(flightpath)) {
                     return;
                 }
                 
-                ArrayList<DroneMove> moves = generateMovesForFlightpath(flightpath, order);
-                droneMoves.addAll(moves);
+                ArrayList<DroneMove> moves = movementController.generateMovesForFlightpath(
+                        flightpath, order.orderNo(), droneModel.getComputationStartTime());
+
+                droneModel.recordDeliveryMoves(moves);
                 movementController.makeDelivery(flightpath);
                 ordersController.orderDelivered(order);
             }

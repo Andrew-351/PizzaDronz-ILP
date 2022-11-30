@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.movement;
+package uk.ac.ed.inf.movement.model;
 
 import java.util.List;
 

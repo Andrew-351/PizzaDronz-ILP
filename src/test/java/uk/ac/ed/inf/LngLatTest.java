@@ -1,9 +1,9 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
-import uk.ac.ed.inf.movement.CentralArea;
-import uk.ac.ed.inf.movement.CompassDirection;
-import uk.ac.ed.inf.movement.LngLat;
+import uk.ac.ed.inf.movement.model.CentralArea;
+import uk.ac.ed.inf.movement.model.CompassDirection;
+import uk.ac.ed.inf.movement.model.LngLat;
 import static org.junit.Assert.*;
 
 /**

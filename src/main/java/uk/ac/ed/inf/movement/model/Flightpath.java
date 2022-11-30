@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.movement;
+package uk.ac.ed.inf.movement.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,7 +160,7 @@ public final class Flightpath {
         return minDistanceVertex;
     }
 
-    void findShortestPath() {
+    public void findShortestPath() {
         constructVisibilityGraph();
         // if visibilityGraph == null => there are only two points - start and finish
         if (visibilityGraph == null) {
@@ -202,16 +202,18 @@ public final class Flightpath {
 
     private boolean isLineOutsideNoFlyZone(LngLat p1, LngLat p2) {
         LngLat midPoint = new LngLat((p1.lng() + p2.lng()) / 2, (p1.lat() + p2.lat()) / 2);
-        for (var zone : noFlyZones) {
-            if (Arrays.asList(zone.getVertexCoordinates()).contains(p1) &&
-                Arrays.asList(zone.getVertexCoordinates()).contains(p2)) {
-                return !midPoint.inArea(zone);
+        if (noFlyZones != null) {
+            for (var zone : noFlyZones) {
+                if (Arrays.asList(zone.getVertexCoordinates()).contains(p1) &&
+                        Arrays.asList(zone.getVertexCoordinates()).contains(p2)) {
+                    return !midPoint.inArea(zone);
+                }
             }
         }
         return true;
     }
 
-    void optimiseFlightpath() {
+    public void optimiseFlightpath() {
         if (visibilityGraph == null) {
             return;
         }
@@ -290,7 +292,7 @@ public final class Flightpath {
         return bestPoint;
     }
 
-    void calculateMovesPoints() {
+    public void calculateMovesPoints() {
         LngLat currentPoint = approximatePoints.get(0);
         droneMovesPoints.add(currentPoint);
         for (int i = 0; i < approximatePoints.size() - 1; i++) {

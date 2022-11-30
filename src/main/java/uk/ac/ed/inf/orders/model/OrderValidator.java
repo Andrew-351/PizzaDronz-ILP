@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.orders;
+package uk.ac.ed.inf.orders.model;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -19,7 +19,7 @@ public final class OrderValidator {
      * @param order the order
      * @return OrderOutcome which corresponds to the order
      */
-    OrderOutcome validateOrder(Order order) {
+    public OrderOutcome validateOrder(Order order) {
         if (!areGeneralFieldsValid(order)) {
             return OrderOutcome.Invalid;
         }
@@ -178,7 +178,7 @@ public final class OrderValidator {
         }
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.parse(order.orderDate(), formatter);
+            LocalDate.parse(order.orderDate(), formatter);
         } catch (DateTimeParseException e) {
             return false;
         }
