@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ed.inf.RestServerClient;
 import uk.ac.ed.inf.movement.model.LngLat;
+
 import java.util.Map;
 
 /**
  * Representation of a restaurant participating in the scheme.
  */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Restaurant {
     /**
@@ -43,18 +45,10 @@ public final class Restaurant {
                 RestServerClient.BASE_URL + RestServerClient.RESTAURANTS_ENDPOINT, Restaurant[].class);
     }
 
-    /**
-     * Returns the location of the restaurant.
-     * @return the location of the restaurant.
-     */
     public LngLat getLocation() {
         return location;
     }
 
-    /**
-     * Returns the menu of the restaurant.
-     * @return the menu of the restaurant.
-     */
     public Menu getMenu() {
         return menu;
     }

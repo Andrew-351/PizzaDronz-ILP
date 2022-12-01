@@ -1,5 +1,9 @@
 package uk.ac.ed.inf.movement.model;
 
+/**
+ * The Movement Model class is a model of the drone's movement.
+ */
+
 public final class MovementModel {
     /**
      * The number of moves the drone can make before it runs out of battery.
@@ -13,15 +17,21 @@ public final class MovementModel {
 
     private final CentralArea centralArea;
     private final NoFlyZone[] noFlyZones;
+
+    /**
+     * Moves left for the drone before its battery is exhausted.
+     */
     private int movesLeft = MAXIMUM_MOVES;
 
     public MovementModel() {
-        centralArea = CentralArea.getCentralAreaFromRestServer();
-        noFlyZones = NoFlyZone.getNoFlyZonesFromRestServer();
+        centralArea = null;
+        noFlyZones = null;
     }
 
 
-    // Calculate flightpath to a certain restaurant.
+    /**
+     * Calculate flightpath to a certain restaurant.
+     */
     public Flightpath calculateShortestFlightpathToRestaurant(LngLat restaurantLocation) {
         Flightpath flightpath = new Flightpath(DELIVERY_POINT, restaurantLocation, centralArea, noFlyZones);
         flightpath.findShortestPath();
@@ -29,6 +39,11 @@ public final class MovementModel {
         flightpath.calculateMovesPoints();
         return flightpath;
     }
+
+    /**
+     * Adjusts the drone's battery charge by reducing it by the number of moves it took.
+     * @param moves the number of moves by which the battery charge (moves left) to be reduced
+     */
     public void adjustMovesLeft(int moves) {
         movesLeft -= moves;
     }

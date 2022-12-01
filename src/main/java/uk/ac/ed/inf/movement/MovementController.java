@@ -1,7 +1,13 @@
 package uk.ac.ed.inf.movement;
 
 import uk.ac.ed.inf.movement.model.*;
+
 import java.util.ArrayList;
+
+/**
+ * The Movement Controller class keeps track and controls all actions solely related to the drone's movement.
+ * It only directly communicates with Movement Model and Movement View.
+ */
 
 public final class MovementController {
     private final MovementModel movementModel;
@@ -12,7 +18,11 @@ public final class MovementController {
         movementView = new MovementView();
     }
 
-    // Calculate flightpath to a certain restaurant.
+    /**
+     * Computes a flightpath to a certain restaurant.
+     * @param restaurantLocation LngLat coordinates of the restaurant
+     * @return a Flightpath object which represents the found path to the restaurant
+     */
     public Flightpath getFlightpathToRestaurant(LngLat restaurantLocation) {
         return movementModel.calculateShortestFlightpathToRestaurant(restaurantLocation);
     }
@@ -24,7 +34,7 @@ public final class MovementController {
      * above the delivery point for one move.
      * @param flightpath a flightpath to a certain restaurant
      * @param orderNo a string representing the number of the order currently being delivered
-     * @return a list of drone's moves to pick up and deliver a specific order
+     * @return a list of drone's moves to collect and deliver a specific order
      */
     public ArrayList<DroneMove> generateMovesForFlightpath(Flightpath flightpath, String orderNo, long computationStartTime) {
         // The list of all moves to pick up and deliver current order.
@@ -80,18 +90,32 @@ public final class MovementController {
         return droneMovesForFlightpath;
     }
 
+    /**
+     * Checks if the drone's battery has enough charge left to follow a given flightpath, i.e. pick-up and deliver an order.
+     * @param flightpath a Flightpath used to deliver an order
+     * @return true if the drone has enough moves left (not less than the length of the flightpath); false otherwise
+     */
     public boolean enoughMovesLeft(Flightpath flightpath) {
-        return flightpath.getDroneMovesDirections().size() * 2 + 2 < movementModel.getMovesLeft();
+        return flightpath.getDroneMovesDirections().size() * 2 + 2 <= movementModel.getMovesLeft();
     }
 
+    /**
+     * Makes appropriate changes in the Movement Model after delivering an order via a given flightpath, namely
+     * reduces the drone's battery's charge (moves left).
+     * @param flightpath a Flightpath used to deliver an order
+     */
     public void makeDelivery(Flightpath flightpath) {
         int lengthInMoves = flightpath.getDroneMovesDirections().size() * 2 + 2;
         movementModel.adjustMovesLeft(lengthInMoves);
     }
 
+    /**
+     * Uses the Movement View to output the resulting data related to the drone's movement.
+     * @param date the date on which the drone is delivering orders
+     * @param droneMoves a list of calculated moves the drone will make on the given date
+     */
     public void outputDroneMoves(String date, ArrayList<DroneMove> droneMoves) {
         movementView.createFlightpathFile(date, droneMoves);
         movementView.createDroneFile(date, droneMoves);
     }
 }
-

@@ -23,8 +23,8 @@ public record LngLat(double lng, double lat) {
 
 
     public LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latitude") double lat) {
-            this.lng = lng;
-            this.lat = lat;
+        this.lng = lng;
+        this.lat = lat;
     }
 
     @Override
@@ -50,9 +50,9 @@ public record LngLat(double lng, double lat) {
     }
 
     /**
-     * Calculates the distance from the point to another LngLat point.
+     * Calculates the distance from this LngLat point to another LngLat point.
      * @param lngLat a LngLat point on the map
-     * @return the Pythagorean distance between THIS point and the parameter point.
+     * @return the Pythagorean distance between this point and the parameter point.
      */
     public double distanceTo (LngLat lngLat) {
         return Math.sqrt(Math.pow(lngLat.lng - lng, 2) + Math.pow(lngLat.lat - lat, 2));
@@ -105,7 +105,7 @@ public record LngLat(double lng, double lat) {
     /**
      * Determines if the point is "close" (within the distance tolerance) to another LngLat point.
      * @param lngLat a LngLat point on the map
-     * @return true if THIS point is "close" to the parameter point; false otherwise.
+     * @return true if this point is "close" to the parameter point; false otherwise.
      */
     public boolean closeTo(LngLat lngLat) {
         return distanceTo(lngLat) < DISTANCE_TOLERANCE;
@@ -121,7 +121,7 @@ public record LngLat(double lng, double lat) {
             return this;
         }
         return new LngLat (
-            lng + MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
-            lat + MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
+                lng + MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
+                lat + MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
     }
 }

@@ -5,17 +5,18 @@ import uk.ac.ed.inf.movement.model.DroneMove;
 import uk.ac.ed.inf.movement.model.Flightpath;
 import uk.ac.ed.inf.orders.OrdersController;
 import uk.ac.ed.inf.orders.model.Order;
+
 import java.util.ArrayList;
 
 /**
- * The drone controller keeps track of and controls all aspects of the drone-based pizza delivery system.
- * It also has functionality which requires using different components of the system (sub-packages).
+ * The Drone Controller class keeps track of and controls all aspects of the drone-based pizza delivery system.
+ * It only directly communicates with the general Drone Model and the controllers of system components (sub-packages).
  */
+
 public final class DroneController {
     private final MovementController movementController;
     private final OrdersController ordersController;
     private final DroneModel droneModel;
-
 
     /**
      * Creates an instance of DroneController class.
@@ -46,17 +47,9 @@ public final class DroneController {
         }
 
         droneModel.sortRestaurantsByDistance();
-        deliverOrders();
 
-        // Create output files with the information about deliveries and drone's flightpath for a given date.
-        ordersController.outputDeliveries(droneModel.getDate());
-        movementController.outputDroneMoves(droneModel.getDate(), droneModel.getDroneMoves());
-    }
+        boolean sufficientBatteryCharge = true;
 
-    /**
-     * Delivers orders from the restaurants while the drone's battery is not exhausted.
-     */
-    private void deliverOrders() {
         // Go over the restaurants in the order "from the nearest to the farthest".
         for (var restaurant : droneModel.getOrderOfRestaurantsByDistance()) {
             // Flightpath to currently the nearest restaurant.
@@ -67,9 +60,10 @@ public final class DroneController {
             for (var order : orders) {
                 // If the battery charge is insufficient to deliver the order, stay.
                 if (!movementController.enoughMovesLeft(flightpath)) {
-                    return;
+                    sufficientBatteryCharge = false;
+                    break;
                 }
-                
+
                 ArrayList<DroneMove> moves = movementController.generateMovesForFlightpath(
                         flightpath, order.orderNo(), droneModel.getComputationStartTime());
 
@@ -77,6 +71,13 @@ public final class DroneController {
                 movementController.makeDelivery(flightpath);
                 ordersController.orderDelivered(order);
             }
+            if (!sufficientBatteryCharge) {
+                break;
+            }
         }
+
+        // Create output files with the information about deliveries and drone's flightpath for a given date.
+        ordersController.outputDeliveries(droneModel.getDate());
+        movementController.outputDroneMoves(droneModel.getDate(), droneModel.getDroneMoves());
     }
 }

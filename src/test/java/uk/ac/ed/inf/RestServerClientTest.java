@@ -12,15 +12,6 @@ import static org.junit.Assert.*;
 
 public class RestServerClientTest {
     @Test
-    public void setBaseUrlTest() {
-        String originalBaseUrl = RestServerClient.BASE_URL;
-        RestServerClient.setBaseUrl("newURL");
-        assertEquals("newURL", RestServerClient.BASE_URL);
-        RestServerClient.setBaseUrl(originalBaseUrl);
-        assertEquals(originalBaseUrl, RestServerClient.BASE_URL);
-    }
-
-    @Test
     public void getDataFromServerTestFailure() {
         assertNull(RestServerClient.getDataFromServer(
                 RestServerClient.BASE_URL + RestServerClient.ORDERS_ENDPOINT, Restaurant.class));

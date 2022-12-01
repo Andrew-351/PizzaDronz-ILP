@@ -2,6 +2,7 @@ package uk.ac.ed.inf.orders.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Map;
 
 /**
@@ -30,10 +31,6 @@ public final class Menu {
         this.pizzas = new ObjectMapper().convertValue(pizzas, Pizza[].class);
     }
 
-    /**
-     * Returns an array of all pizzas on the menu.
-     * @return an array of all pizzas on the menu.
-     */
     public Pizza[] getPizzas() {
         return pizzas;
     }

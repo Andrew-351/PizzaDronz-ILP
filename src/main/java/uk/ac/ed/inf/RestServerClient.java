@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -23,6 +24,9 @@ public final class RestServerClient {
      * @param url new base URL of the server
      */
     public static void setBaseUrl(String url) {
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
         BASE_URL = url;
     }
 

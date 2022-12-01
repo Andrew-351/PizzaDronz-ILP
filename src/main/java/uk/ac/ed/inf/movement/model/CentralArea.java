@@ -4,7 +4,6 @@ import uk.ac.ed.inf.RestServerClient;
 
 /**
  * Representation of the central area.
- *
  */
 
 public final class CentralArea extends Area {

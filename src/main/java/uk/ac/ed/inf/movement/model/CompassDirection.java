@@ -90,9 +90,6 @@ public enum CompassDirection {
      */
     ESE(337.5);
 
-    /**
-     * The angle in degrees corresponding to the compass direction.
-     */
     private final Double angle;
 
     /**
@@ -111,6 +108,10 @@ public enum CompassDirection {
         return angle;
     }
 
+    /**
+     * Computes a compass direction opposite to the provided one.
+     * @return a compass direction opposite to the provided one
+     */
     public CompassDirection getOppositeDirection() {
         switch (this) {
             case E -> {

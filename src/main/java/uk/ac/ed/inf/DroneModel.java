@@ -4,26 +4,28 @@ import uk.ac.ed.inf.movement.model.DroneMove;
 import uk.ac.ed.inf.movement.model.Flightpath;
 import uk.ac.ed.inf.orders.model.Order;
 import uk.ac.ed.inf.orders.model.Restaurant;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The Drone Model class is a general model of the drone-based system.
+ * Keeps information relevant for the drone that comes from different components of the system.
+ */
+
 public final class DroneModel {
     private final String date;
-
-    /**
-     * Time in nanoseconds when the DroneController is initialised.
-     */
     private final long computationStartTime;
 
     /**
-     * A hashmap which represents correspondence between the restaurants and all valid orders from them.
+     * A HashMap which represents correspondence between the restaurants and all valid orders from them.
      * The restaurants only include those from which there are orders on a given date.
      * The orders are all valid.
      */
     private HashMap<Restaurant, ArrayList<Order>> restaurantsAndOrders;
 
     /**
-     * A hashmap which represents correspondence between the restaurants and flightpaths to them.
+     * A HashMap which represents correspondence between the restaurants and flightpaths to them.
      * Only contains restaurants from which there are orders on a given date.
      */
     private final HashMap<Restaurant, Flightpath> flightpathsToRestaurants = new HashMap<>();
@@ -38,24 +40,32 @@ public final class DroneModel {
      */
     private final ArrayList<DroneMove> droneMoves = new ArrayList<>();
 
-    DroneModel(String date) throws NullPointerException {
+    public DroneModel(String date) {
         this.date = date;
         computationStartTime = System.nanoTime();
     }
 
-
-    void recordFlightpathToRestaurant(Restaurant restaurant, Flightpath flightpath) {
+    /**
+     * Makes a record of the association between a restaurant and the flightpath to it.
+     * @param restaurant the restaurant
+     * @param flightpath the flightpath to the restaurant
+     */
+    public void recordFlightpathToRestaurant(Restaurant restaurant, Flightpath flightpath) {
         flightpathsToRestaurants.put(restaurant, flightpath);
     }
 
-    void recordDeliveryMoves(ArrayList<DroneMove> moves) {
+    /**
+     * Makes a record of the drone's moves necessary for a delivery.
+     * @param moves the drone's moves necessary to make a delivery.
+     */
+    public void recordDeliveryMoves(ArrayList<DroneMove> moves) {
         droneMoves.addAll(moves);
     }
 
     /**
      * Creates a list of restaurants sorted by the distance from the delivery point.
      */
-    void sortRestaurantsByDistance() {
+    public void sortRestaurantsByDistance() {
         HashMap<Restaurant, Integer> distancesToRestaurants = new HashMap<>();
         for (var restaurant : flightpathsToRestaurants.keySet()) {
             distancesToRestaurants.put(restaurant, flightpathsToRestaurants.get(restaurant).getDroneMovesDirections().size());
@@ -79,31 +89,31 @@ public final class DroneModel {
     /////                                SETTERS and GETTERS                                 /////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    void setRestaurantsAndOrders(HashMap<Restaurant, ArrayList<Order>> restaurantsAndOrders) {
+    public void setRestaurantsAndOrders(HashMap<Restaurant, ArrayList<Order>> restaurantsAndOrders) {
         this.restaurantsAndOrders = restaurantsAndOrders;
     }
 
-    HashMap<Restaurant, ArrayList<Order>> getRestaurantsAndOrders() {
+    public HashMap<Restaurant, ArrayList<Order>> getRestaurantsAndOrders() {
         return restaurantsAndOrders;
     }
 
-    String getDate() {
+    public String getDate() {
         return date;
     }
 
-    long getComputationStartTime() {
+    public long getComputationStartTime() {
         return computationStartTime;
     }
 
-    HashMap<Restaurant, Flightpath> getFlightpathsToRestaurants() {
+    public HashMap<Restaurant, Flightpath> getFlightpathsToRestaurants() {
         return flightpathsToRestaurants;
     }
 
-    ArrayList<Restaurant> getOrderOfRestaurantsByDistance() {
+    public ArrayList<Restaurant> getOrderOfRestaurantsByDistance() {
         return orderOfRestaurantsByDistance;
     }
 
-    ArrayList<DroneMove> getDroneMoves() {
+    public ArrayList<DroneMove> getDroneMoves() {
         return droneMoves;
     }
 }

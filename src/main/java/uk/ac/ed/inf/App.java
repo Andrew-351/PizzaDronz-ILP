@@ -11,6 +11,7 @@ import java.time.format.DateTimeParseException;
  * <p>
  * A single drone delivering pizzas to Appleton Tower from different restaurants in Edinburgh.
  */
+
 public class App {
     public static void main(String[] args) {
         boolean argsCorrect = validateArguments(args);
@@ -20,14 +21,9 @@ public class App {
 
         String date = args[0];
         String baseUrlString = args[1];
-        if (!baseUrlString.endsWith("/")) {
-            baseUrlString += "/";
-        }
         try {
             DroneController droneController = new DroneController(date, baseUrlString);
             droneController.startSession();
-
-
         } catch (NullPointerException e) {
             System.err.println(e.getMessage());
         }
@@ -38,14 +34,14 @@ public class App {
      * For the arguments to be valid, they should be:
      * 1) a valid date (in format YYYY-MM-DD),
      * 2) server base address, where the data would be retrieved from,
-     * 3) (optionally) any word
+     * 3) any word
      *
      * @param args command line arguments to be validated
      * @return true if arguments are valid; false otherwise
      */
     private static boolean validateArguments(String[] args) {
-        if (args == null || args.length < 2) {
-            System.err.println("Please provide as arguments: date, server base URL, and (optionally) any word.");
+        if (args == null || args.length != 3) {
+            System.err.println("Please provide 3 arguments: date, server base URL, and any word.");
             return false;
         }
 
