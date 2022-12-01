@@ -24,8 +24,8 @@ public final class MovementModel {
     private int movesLeft = MAXIMUM_MOVES;
 
     public MovementModel() {
-        centralArea = null;
-        noFlyZones = null;
+        centralArea = CentralArea.getCentralAreaFromRestServer();
+        noFlyZones = NoFlyZone.getNoFlyZonesFromRestServer();
     }
 
 
