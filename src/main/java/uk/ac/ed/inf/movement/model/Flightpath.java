@@ -19,7 +19,7 @@ public final class Flightpath {
     private final ArrayList<LngLat> allPoints = new ArrayList<>();
 
     /**
-     * All edges of all no-fly zones.
+     * All edges of all no-fly zones that must not be crossed.
      */
     private final ArrayList<LngLat[]> allEdges = new ArrayList<>();
 
