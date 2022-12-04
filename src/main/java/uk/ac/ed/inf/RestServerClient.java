@@ -9,7 +9,7 @@ import java.net.URL;
  * Rest Server Client to communicate with the server.
  */
 
-public final class RestServerClient {
+public abstract class RestServerClient {
     /**
      * Default base URL of the server.
      */
