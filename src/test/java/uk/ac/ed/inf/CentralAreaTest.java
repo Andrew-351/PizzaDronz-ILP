@@ -2,6 +2,8 @@ package uk.ac.ed.inf;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ed.inf.movement.model.CentralArea;
+import uk.ac.ed.inf.movement.model.LngLat;
 import static org.junit.Assert.assertArrayEquals;
 
 /**
@@ -13,7 +15,7 @@ public class CentralAreaTest {
 
     @Before
     public void setUp() {
-        centralArea = CentralArea.instance;
+        centralArea = CentralArea.getCentralAreaFromRestServer();
     }
 
     @Test

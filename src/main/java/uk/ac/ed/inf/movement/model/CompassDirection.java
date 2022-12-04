@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.movement.model;
 
 /**
  * Representation of a compass direction of the drone's move.
@@ -90,9 +90,6 @@ public enum CompassDirection {
      */
     ESE(337.5);
 
-    /**
-     * The angle in degrees corresponding to the compass direction.
-     */
     private final Double angle;
 
     /**
@@ -107,7 +104,64 @@ public enum CompassDirection {
      * Returns an angle in degrees corresponding to the compass direction.
      * @return an angle in degrees corresponding to the compass direction.
      */
-    public double getAngle() {
+    public Double getAngle() {
         return angle;
+    }
+
+    /**
+     * Computes a compass direction opposite to the provided one.
+     * @return a compass direction opposite to the provided one
+     */
+    public CompassDirection getOppositeDirection() {
+        switch (this) {
+            case E -> {
+                return W;
+            }
+            case ENE -> {
+                return WSW;
+            }
+            case NE -> {
+                return SW;
+            }
+            case NNE -> {
+                return SSW;
+            }
+            case N -> {
+                return S;
+            }
+            case NNW -> {
+                return SSE;
+            }
+            case NW -> {
+                return SE;
+            }
+            case WNW -> {
+                return ESE;
+            }
+            case W -> {
+                return E;
+            }
+            case WSW -> {
+                return ENE;
+            }
+            case SW -> {
+                return NE;
+            }
+            case SSW -> {
+                return NNE;
+            }
+            case S -> {
+                return N;
+            }
+            case SSE -> {
+                return NNW;
+            }
+            case SE -> {
+                return NW;
+            }
+            default -> {
+                return HOVER;
+            }
+        }
     }
 }

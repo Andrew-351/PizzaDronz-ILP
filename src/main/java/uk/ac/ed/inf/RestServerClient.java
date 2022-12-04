@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -8,7 +9,7 @@ import java.net.URL;
  * Rest Server Client to communicate with the server.
  */
 
-public final class RestServerClient {
+public abstract class RestServerClient {
     /**
      * Default base URL of the server.
      */
@@ -16,13 +17,16 @@ public final class RestServerClient {
     public final static String CENTRAL_AREA_ENDPOINT = "centralArea";
     public final static String NO_FLY_ZONES_ENDPOINT = "noFlyZones";
     public final static String RESTAURANTS_ENDPOINT = "restaurants";
-    public final static String ORDERS_ENDPOINT = "orders";
+    public final static String ORDERS_ENDPOINT = "orders/";
 
     /**
      * Updates the base URL of the server.
      * @param url new base URL of the server
      */
     public static void setBaseUrl(String url) {
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
         BASE_URL = url;
     }
 
@@ -32,9 +36,9 @@ public final class RestServerClient {
      * @param c variable type for deserialisation
      * @return data retrieved from server if successfully read; null otherwise.
      */
-    public static Object getDataFromServer(URL url, Class<?> c) {
+    public static Object getDataFromServer(String url, Class<?> c) {
         try {
-            return new ObjectMapper().readValue(url, c);
+            return new ObjectMapper().readValue(new URL(url), c);
         } catch (IOException e) {
             return null;
         }

@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.movement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,28 +11,65 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record LngLat(double lng, double lat) {
+    /**
+     * Distance tolerance to consider if two LngLat points are "close" to one another.
+     */
+    private static final double DISTANCE_TOLERANCE = 0.00015;
+
+    /**
+     * Length of a single move of the drone in one direction (in degrees).
+     */
+    private final static double MOVE_LENGTH = 0.00015;
+
 
     public LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latitude") double lat) {
-            this.lng = lng;
-            this.lat = lat;
+        this.lng = lng;
+        this.lat = lat;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        LngLat lngLat = (LngLat) obj;
+        return lng == lngLat.lng && lat == lngLat.lat;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 29;
+        int result = 1;
+        result = prime * result + ((Double) lng).hashCode();
+        result = prime * result + ((Double) lat).hashCode();
+        return result;
     }
 
     /**
-     * Calculates the distance from the point to another LngLat point.
+     * Calculates the distance from this LngLat point to another LngLat point.
      * @param lngLat a LngLat point on the map
-     * @return the Pythagorean distance between THIS point and the parameter point.
+     * @return the Pythagorean distance between this point and the parameter point.
      */
     public double distanceTo (LngLat lngLat) {
         return Math.sqrt(Math.pow(lngLat.lng - lng, 2) + Math.pow(lngLat.lat - lat, 2));
     }
 
     /**
-     * Determines if the LngLat point is within the Central area.
-     * @return true if the point is within the Central area; false otherwise.
+     * Determines if the LngLat point is within an area (Central or no-fly zone).
+     * @param area the Central Area or any of the no-fly zones
+     * @return true if the point is within the area; false otherwise.
      */
-    public boolean inCentralArea() {
+    public boolean inArea(Area area) {
+        if (area == null) {
+            return false;
+        }
+
         boolean oddEdgesCrossedOnTheLeft = false;
-        LngLat[] coordinates = CentralArea.instance.getVertexCoordinates();
+        LngLat[] coordinates = area.getVertexCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             double x1 = coordinates[i].lng;
             double y1 = coordinates[i].lat;
@@ -68,10 +105,10 @@ public record LngLat(double lng, double lat) {
     /**
      * Determines if the point is "close" (within the distance tolerance) to another LngLat point.
      * @param lngLat a LngLat point on the map
-     * @return true if THIS point is "close" to the parameter point; false otherwise.
+     * @return true if this point is "close" to the parameter point; false otherwise.
      */
     public boolean closeTo(LngLat lngLat) {
-        return distanceTo(lngLat) < MovementConstants.DISTANCE_TOLERANCE;
+        return distanceTo(lngLat) < DISTANCE_TOLERANCE;
     }
 
     /**
@@ -84,7 +121,7 @@ public record LngLat(double lng, double lat) {
             return this;
         }
         return new LngLat (
-            lng + MovementConstants.MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
-            lat + MovementConstants.MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
+                lng + MOVE_LENGTH * Math.cos(Math.toRadians(direction.getAngle())),
+                lat + MOVE_LENGTH * Math.sin(Math.toRadians(direction.getAngle())));
     }
 }
