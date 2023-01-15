@@ -39,7 +39,7 @@ public class App {
      * @param args command line arguments to be validated
      * @return true if arguments are valid; false otherwise
      */
-    private static boolean validateArguments(String[] args) {
+    public static boolean validateArguments(String[] args) {
         if (args == null || args.length != 3) {
             System.err.println("Please provide 3 arguments: date, server base URL, and any word.");
             return false;

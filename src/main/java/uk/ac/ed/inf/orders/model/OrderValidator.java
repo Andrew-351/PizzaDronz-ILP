@@ -57,7 +57,7 @@ public final class OrderValidator {
         return OrderOutcome.VALID_BUT_NOT_DELIVERED;
     }
 
-    private boolean isCardNumberValid(Order order) {
+    public boolean isCardNumberValid(Order order) {
         String cardNumber = order.creditCardNumber();
 
         // Check the card number contains only digits and its length is 16.
@@ -109,7 +109,7 @@ public final class OrderValidator {
         return sum % 10 == 0;
     }
 
-    private boolean isExpiryDateValid(Order order) {
+    public boolean isExpiryDateValid(Order order) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate orderDate = LocalDate.parse(order.orderDate(), dateFormatter);
         String expiryDateString = order.creditCardExpiry();
@@ -125,12 +125,12 @@ public final class OrderValidator {
         }
     }
 
-    private boolean isCvvValid(Order order) {
+    public boolean isCvvValid(Order order) {
         String cvv = order.cvv();
         return cvv != null && cvv.length() == 3 && cvv.matches("^[0-9]+$");
     }
 
-    private boolean isPizzaCountValid(Order order) {
+    public boolean isPizzaCountValid(Order order) {
         if (order.orderItems() == null) {
             return false;
         }
@@ -138,7 +138,7 @@ public final class OrderValidator {
         return 0 < numberOfPizzas && numberOfPizzas <= 4;
     }
 
-    private boolean areAllPizzasDefined(Order order) {
+    public boolean areAllPizzasDefined(Order order) {
         for (var orderedPizzaName : order.orderItems()) {
             boolean currentPizzaNameFound = false;
             for (var restaurant : restaurants) {
@@ -155,11 +155,11 @@ public final class OrderValidator {
         return true;
     }
 
-    private Restaurant areAllPizzasFromSameRestaurant(Order order) {
+    public Restaurant areAllPizzasFromSameRestaurant(Order order) {
         return order.getRestaurantForOrder(List.of(restaurants));
     }
 
-    private boolean isTotalValid(Order order, Restaurant restaurant) {
+    public boolean isTotalValid(Order order, Restaurant restaurant) {
         int realTotalCost = 100;    // delivery included
         for (var orderedPizzaName : order.orderItems()) {
             for (var pizza : restaurant.getMenu().getPizzas()) {
@@ -172,7 +172,7 @@ public final class OrderValidator {
         return order.priceTotalInPence() == realTotalCost;
     }
 
-    private boolean areGeneralFieldsValid(Order order) {
+    public boolean areGeneralFieldsValid(Order order) {
         if (order.customer() == null || order.customer().length() < 2) {
             return false;
         }
