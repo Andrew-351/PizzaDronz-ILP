@@ -1,4 +1,4 @@
-# PizzaDronz-ILP
+# PizzaDronz
 Informatics Large Practical Project. Grade awarded: 81/100 (A2)
 
 # Drone-based Pizza Delivery Service
